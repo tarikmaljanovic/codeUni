@@ -1,0 +1,57 @@
+.container {
+    width: 100vw;
+    height: 100dvh;
+    background-image: url('../../public/background.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .landing-box {
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+        width: 400px;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        .banner {
+            font-family: 'ubuntu-title';
+            font-size: 50px;
+        }
+        .form-body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            height: 100%;
+            justify-content: flex-start;
+            animation: translateX 300ms ease-in-out forwards;
+            .text-field {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+        }
+        .form-control {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 45px;
+            .back-button {
+                background-color: white;
+                border: 1px solid #FFD872
+            }
+            .login-button {
+                display: flex;
+                justify-self: flex-end;
+            }
+        }
+        .to-login {
+            font-size: 12px;
+        }
+    }
+}

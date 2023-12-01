@@ -1,0 +1,66 @@
+@import url('https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:wght@400;500;700&display=swap');
+
+@font-face {
+  font-family: 'ubuntu-title';
+  src: url('../public/fonts/Ubuntu-Title.ttf');
+}
+
+$primary: #0F4D90;
+$secondary: #6E62F5;
+$accent: #FFD872;
+
+:root {
+  box-sizing: border-box;
+  font-family:'Roboto', sans-serif ;
+}
+
+body {
+  overflow: hidden;
+  margin: 0;
+}
+
+.is-invisibe {
+  visibility: hidden;
+}
+
+.link {
+  color: #0F4D90;
+  cursor: pointer;
+}
+
+.bttn {
+  justify-self: flex-end;
+  background-color: #FFD872;
+  color: #424242;
+  border-radius: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  border: none;
+  transition: 0.2s ease;
+  padding: 5px 30px
+}
+
+.bttn:hover {
+  transition: 0.2s ease;
+  background-color: #f0c350;
+}
+
+.bttn:active {
+  box-shadow: none;
+}
+
+@keyframes translateX {
+  0% {
+    opacity: 0;
+    transform: translateX(60px);
+  }
+  
+  80% {
+    transform: translateX(-5px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
+}
