@@ -1,0 +1,11 @@
+.container {
+    width: 100vw;
+    height: 100dvh;
+    background-image: url('../../public/dashboard_background.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
