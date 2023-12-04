@@ -1,0 +1,73 @@
+@import 'bulma';
+.container {
+    width: 100vw;
+    height: 100dvh;
+    background-image: url('../../public/dashboard_background.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y:scroll;
+    overflow-x: hidden;
+    .section-title {
+        width: 100%;
+        font-size: 30px;
+        font-family: 'ubuntu-title';
+        margin-bottom: 25px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        progress {
+            margin: 0px 5px;
+            width: 50%;
+        }
+    }
+    .course-list {
+        width: 80%;
+        .course-cell {
+            width: 100%;
+            .course-box {
+                width: 100%;
+                border-radius: 20px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                padding: 20px;
+                color: white;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: 300ms ease;
+                cursor: pointer;
+                .left {
+                    display: flex;
+                    align-items: center;
+                    svg {
+                        margin-right: 5px;
+                    }
+                }
+            }
+            .course-box:active {
+                box-shadow: none;
+            }
+        }
+        .project-cell {
+            .project-box {
+                background-color: #6E62F5;
+            }
+            .project-box:hover {
+                background-color: #5c52c9;
+            }
+        }
+        .lesson-cell {
+            .lesson-box {
+                background-color: #0F4D90;
+            }
+            .lesson-box:hover {
+                background-color: #0e4177;
+            }
+        }
+        
+    }
+}

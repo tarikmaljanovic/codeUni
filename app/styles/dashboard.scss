@@ -1,3 +1,4 @@
+@import 'bulma';
 .container {
     width: 100vw;
     height: 100dvh;
@@ -8,25 +9,71 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    .courses-list {
+    overflow-y:scroll;
+    overflow-x: hidden;
+    .section-title {
         width: 100%;
-        margin-top: 20px;
-        .course {
-            width: 150px;
-            height: 150px;
-            border-radius: 20px;
-            padding: 20px;
-            background-color: #FFD872;
-            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-            transition: 0.2s ease;
-            cursor: pointer;
+        font-size: 30px;
+        font-family: 'ubuntu-title';
+        margin-bottom: 15px;
+    }
+    .course-list {
+        width: 100%;
+        transition: 100ms ease;
+        .course-cell {
+            @include touch {
+                width: 100%;
+            }
+            .course-box {
+                background-color: #0F4D90;
+                border-radius: 20px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                cursor: pointer;
+                transition: 300ms ease;
+                padding: 15px;
+            }
+            .course-box:hover {
+                background-color: #0e4177;
+                transition: 300ms ease;
+            }
+            .course-box:active {
+                box-shadow: none;
+            }
         }
-        .course:hover {
-            transition: 0.2s ease;
-            background-color: #f0c350;
-        }
-        .course:active {
-            box-shadow: none;
+    }
+    .less {
+        transform: scaleY(0%);
+        max-height: 0;
+        opacity: 0;
+        transition: 200ms ease;
+    }
+    .badge-list {
+        width: 100%;
+        .empty-list {
+            width: 100%;
+            .empty-list-entry {
+                width: 100%;
+                height: 200px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                border-radius: 20px;
+                padding: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                .text {
+                    font-size: 18px;
+                    color: #848484;
+                }
+                svg {
+                    width: 70px;
+                    height: 70px;
+                    color: #c3c3c3
+                }
+            }
         }
     }
 }

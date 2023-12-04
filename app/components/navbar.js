@@ -12,6 +12,7 @@ export default function Navbar() {
     const toggleDropdown = () => {
         setDropdown(!dropdown)
     }
+    
 
     return(
         <>
@@ -39,10 +40,8 @@ export default function Navbar() {
                         </div>
                     </div>
                 </ClickAwayListener>
-                <Menu className='is-hidden-desktop' onClick={() => setSidebar(true)} />
+                <Menu className='is-hidden-desktop' onClick={() => setSidebar(true)}/>
             </div>
-            <div className={`sidebar-container is-hidden-desktop ${sidebar ? '' : 'is-hidden'}`}>
-                <div className='back' onClick={() => setSidebar(false)}></div>
                 <div className={`sidebar ${sidebar ? '' : 'hidden'}`}>
                     <span className='welcome'>Welcome:</span>
                     <span className='user-name'>Tarik Maljanovic</span>
@@ -52,7 +51,7 @@ export default function Navbar() {
                         <Button className='bttn'>Log out <Logout/></Button>
                     </div>
                 </div>
-            </div>
+                <div onClick={() => setSidebar(false)} className={`back ${sidebar ? '' : 'is-hidden'}`}></div>
         </>
     )
 }
