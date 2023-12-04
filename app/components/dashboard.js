@@ -49,7 +49,7 @@ export default function DashboardUI() {
             <div className='section-title'>
                 Recent Badges
             </div>
-            <div className='columns is-multiline is-desktop badge-list'>
+            <div className='columns is-multiline is-desktop list'>
                 <div className='column is-12 empty-list'>
                     <div className='notification empty-list-entry'>
                         <span className='text'>No recent Badges earned</span>
@@ -60,7 +60,7 @@ export default function DashboardUI() {
             <div className='section-title'>
                 Leaderboard
             </div>
-            <div className='columns is-multiline is-desktop badge-list'>
+            <div className='columns is-multiline is-desktop list'>
                 <div className='column is-12 empty-list'>
                     <div className='notification empty-list-entry'>
                         <span className='text'>No Leaderboard entries</span>
