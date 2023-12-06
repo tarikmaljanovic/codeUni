@@ -4,7 +4,6 @@ import { Button } from '@mui/joy'
 import { TextField, Input, InputAdornment, IconButton, InputLabel, FormControl, Alert, Snackbar } from '@mui/material'
 import { Visibility, VisibilityOff, Email } from '@mui/icons-material'
 import { useState } from 'react'
-import Link from 'next/link'
 
 export default function Landing() {
     const [displays, setDisplays] = useState({

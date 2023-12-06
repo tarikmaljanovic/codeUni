@@ -1,9 +1,8 @@
 'use client'
-import { useEffect } from 'react'
 import '../styles/course.scss'
 import { ImportContacts, KeyboardArrowRight, Code } from '@mui/icons-material'
-import Navbar from './navbar'
 import { Button } from '@mui/joy'
+import Navbar from './navbar'
 
 export default function CourseUI(props) {
     return(
@@ -11,7 +10,7 @@ export default function CourseUI(props) {
             <Navbar />
             <div className='section-title'>
                 <span className='text'>Java</span>
-                <progress class="progress is-link" value="30" max="100">30%</progress>
+                <progress className="progress is-link" value="30" max="100">30%</progress>
 
             </div>
             <div className='columns is-multiline is-desktop course-list'>

@@ -1,6 +1,6 @@
 'use client'
-import { useState } from 'react'
 import '../styles/navbar.scss'
+import { useState } from 'react'
 import  { Button } from '@mui/material'
 import { AccountCircle, Menu, GridView, Logout } from '@mui/icons-material'
 import { ClickAwayListener } from '@mui/material'
@@ -12,7 +12,6 @@ export default function Navbar() {
     const toggleDropdown = () => {
         setDropdown(!dropdown)
     }
-    
 
     return(
         <>
@@ -42,16 +41,16 @@ export default function Navbar() {
                 </ClickAwayListener>
                 <Menu className='is-hidden-desktop' onClick={() => setSidebar(true)}/>
             </div>
-                <div className={`sidebar ${sidebar ? '' : 'hidden'}`}>
-                    <span className='welcome'>Welcome:</span>
-                    <span className='user-name'>Tarik Maljanovic</span>
-                    <div className='buttons'>
-                        <Button className='bttn'>My Profile <AccountCircle/></Button>
-                        <Button className='bttn'>Dashboard <GridView/></Button>
-                        <Button className='bttn'>Log out <Logout/></Button>
-                    </div>
+            <div className={`sidebar ${sidebar ? '' : 'hidden'}`}>
+                <span className='welcome'>Welcome:</span>
+                <span className='user-name'>Tarik Maljanovic</span>
+                <div className='buttons'>
+                    <Button className='bttn'>My Profile <AccountCircle/></Button>
+                    <Button className='bttn'>Dashboard <GridView/></Button>
+                    <Button className='bttn'>Log out <Logout/></Button>
                 </div>
-                <div onClick={() => setSidebar(false)} className={`back ${sidebar ? '' : 'is-hidden'}`}></div>
+            </div>
+            <div onClick={() => setSidebar(false)} className={`back ${sidebar ? '' : 'is-hidden'}`}></div>
         </>
     )
 }
