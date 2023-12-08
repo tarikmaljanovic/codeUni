@@ -6,7 +6,7 @@ import Navbar from './navbar'
 
 export default function CourseUI(props) {
     return(
-        <div className='container is-fluid px-5'>
+        <div className='container is-fluid px-5 course-container'>
             <Navbar />
             <div className='section-title'>
                 <span className='text'>Java</span>

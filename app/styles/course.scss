@@ -1,6 +1,6 @@
 @import 'bulma';
 
-.container {
+.course-container {
     width: 100vw;
     height: 100dvh;
     background-image: url('../../public/dashboard_background.png');
@@ -10,7 +10,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     overflow-y:scroll;
     overflow-x: hidden;
     .section-title {

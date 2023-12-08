@@ -17,6 +17,13 @@
             cursor: pointer;
             transition: 300ms ease;
             padding: 15px;
+            .course-name {
+                display: flex;
+                align-items: center;
+                svg {
+                    margin-right: 3px;
+                } 
+            }
         }
         .course-box:hover {
             background-color: #0e4177;

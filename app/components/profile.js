@@ -1,19 +1,23 @@
 'use client'
 import '../styles/profile.scss'
-import { useState } from 'react'
-import { EmojiEvents, WorkspacePremium, KeyboardArrowRight } from '@mui/icons-material'
+import { EmojiEvents, WorkspacePremium, Download } from '@mui/icons-material'
+import { Button } from '@mui/joy'
 import Navbar from "./navbar"
 import CourseList from './courseList'
 import icon from '../../public/icon.svg'
+import js from '../../public/js.svg'
 import Image from 'next/image'
 
 
 export default function ProfileUI() {
-    const [showMore, setShowMore] = useState(false)
 
     return(
-        <div className='container is-fluid px-5'>
+        <div className='container is-fluid px-5 profile-container'>
             <Navbar />
+            <div className='section-title'>
+                Favourite Courses
+            </div>
+            <CourseList />
             <div className='section-title'>
                 My Courses
             </div>
@@ -66,7 +70,25 @@ export default function ProfileUI() {
                 My Certificates
             </div>
             <div className='columns is-multiline is-desktop list'>
-                <div className='column is-12 empty-list'>
+                <div className='column is-4 certificate-cell'>
+                    <div className='notification certificate-box'>
+                        <Image src={js.src} width={100} height={100} className='course-image'/>
+                        <div className='right'>
+                            <span className='course-name'>JavaScript</span>
+                            <Button className='bttn'>Download<Download/></Button>
+                        </div>
+                    </div>
+                </div>
+                <div className='column is-4 certificate-cell'>
+                    <div className='notification certificate-box'>
+                        <Image src={js.src} width={100} height={100} className='course-image'/>
+                        <div className='right'>
+                            <span className='course-name'>JavaScript</span>
+                            <Button className='bttn'>Download<Download/></Button>
+                        </div>
+                    </div>
+                </div>
+                <div className='column is-12 empty-list is-hidden'>
                     <div className='notification empty-list-entry'>
                         <span className='text'>No recent Certificates earned</span>
                         <WorkspacePremium />

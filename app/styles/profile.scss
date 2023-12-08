@@ -1,6 +1,6 @@
 @import 'bulma';
 
-.container {
+.profile-container {
     width: 100vw;
     height: 100dvh;
     background-image: url('../../public/dashboard_background.png');
@@ -12,6 +12,7 @@
     align-items: center;
     overflow-y:scroll;
     overflow-x: hidden;
+    padding-bottom: 20px;
     .section-title {
         width: 100%;
         font-size: 25px;
@@ -22,6 +23,9 @@
     .list {
         width: 100%;
         .badge-cell {
+            @include touch {
+                width: 100%;
+            }
             .badge-box {
                 background-color: #ffffff;
                 border-radius: 10px;
@@ -43,6 +47,50 @@
                     }
                     .badge-description {
                         font-size: 14px;
+                    }
+                }
+            }
+        }
+        .certificate-cell {
+            @include touch {
+                width: 100%;
+            }
+            .certificate-box {
+                background-color: #ffffff;
+                border-radius: 10px;
+                box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 20px;
+                img {
+                    width: 100px;
+                    height: 100px;
+                    @include touch {
+                        width: 60px;
+                        height: 60px;
+                    }
+                }
+                .right {
+                    height: 100%;
+                    margin-left: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: center;
+                    .course-name {
+                        margin-bottom: 10px;
+                        font-weight: 600;
+                    }
+                    .bttn {
+                        @include mobile {
+                            width: 110px;
+                            font-size: 12px;
+                        }
+                        svg {
+                            width: 20px;
+                            height: 20px;
+                        }
                     }
                 }
             }

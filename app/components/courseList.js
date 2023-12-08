@@ -1,5 +1,5 @@
 import '../styles/courseList.scss'
-import { KeyboardArrowRight } from '@mui/icons-material'
+import { KeyboardArrowRight, Star } from '@mui/icons-material'
 import { useState } from 'react'
 
 export default function CourseList() {
@@ -15,7 +15,9 @@ export default function CourseList() {
                                 return (
                                     <div key={index} className='column is-4 course-cell'>
                                         <div className='notification is-primary course-box'>
-                                            <span className='course-name'>JavaScript</span>
+                                            <span className='course-name'>
+                                                JavaScript
+                                            </span>
                                             <KeyboardArrowRight/>
                                         </div>
                                     </div>

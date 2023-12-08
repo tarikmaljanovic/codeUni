@@ -2,13 +2,28 @@
 import '../styles/dashboard.scss'
 import  { EmojiEvents, Leaderboard } from '@mui/icons-material'
 import Navbar from './navbar'
+import ErrorUI from './error'
 import CourseList from './courseList'
 import Image from 'next/image'
 import icon from '../../public/icon.svg'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
 export default function DashboardUI() {
+    const [verify, setVerify] = useState()
+
+    useEffect(() => {
+        axios.post('/api/verify', {
+            token: JSON.parse(localStorage.getItem('token'))
+        }).then(res => {
+            console.log(res.data)
+            setVerify(res.data.message)
+        })
+    }, [])
+    
     return(
-        <div className='container is-fluid px-5'>
+        verify == 'valid' ? (
+            <div className='container is-fluid px-5 dashboard-container'>
             <Navbar />
             <div className='section-title'>
                 Course List
@@ -91,5 +106,6 @@ export default function DashboardUI() {
                 </div>
             </div>
         </div>
-    )
+        ) : <ErrorUI msg={verify} />
+        )
 }
