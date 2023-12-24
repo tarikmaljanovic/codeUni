@@ -16,10 +16,11 @@ export default function Landing() {
                 setErrors({...errors, signupError: true})
                 setSnackbars({...snackbars, existingUser: true })
                 return null
+            } else {
+                localStorage.setItem('user', JSON.stringify(res.data.user))
+                localStorage.setItem('token', JSON.stringify(res.data.token))
+                router.push('/dashboard')
             }
-            localStorage.setItem('user', JSON.stringify(res.data.user))
-            localStorage.setItem('token', JSON.stringify(res.data.token))
-            router.push('/dashboard')
         }).catch(error => {
             console.log(error)
         })
@@ -31,10 +32,11 @@ export default function Landing() {
                 setErrors({...errors, loginError: true})
                 setSnackbars({...snackbars, wrongInfo: true})
                 return null
+            } else {
+                localStorage.setItem('user', JSON.stringify(res.data.user))
+                localStorage.setItem('token', JSON.stringify(res.data.token))
+                router.push('/dashboard')
             }
-            localStorage.setItem('user', JSON.stringify(res.data.user))
-            localStorage.setItem('token', JSON.stringify(res.data.token))
-            router.push('/dashboard')
         }).catch(error => {
             console.log(error)
         })

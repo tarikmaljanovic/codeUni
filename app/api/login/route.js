@@ -3,9 +3,12 @@ import { generateToken } from '../jwt';
 import connection from '../db';
 import CryptoJS from 'crypto-js';
 import express from 'express';
+const cors = require('cors');
+
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 export async function POST(request) {
     const data = await request.json()

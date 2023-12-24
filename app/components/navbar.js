@@ -4,10 +4,12 @@ import { useState } from 'react'
 import  { Button } from '@mui/material'
 import { AccountCircle, Menu, GridView, Logout } from '@mui/icons-material'
 import { ClickAwayListener } from '@mui/material'
+import { useRouter } from 'next/navigation'
 
-export default function Navbar() {
+export default function Navbar(props) {
     const [dropdown, setDropdown] = useState(false)
     const [sidebar, setSidebar] = useState(false)
+    const router = useRouter()
 
     const toggleDropdown = () => {
         setDropdown(!dropdown)
@@ -22,17 +24,24 @@ export default function Navbar() {
                 <ClickAwayListener onClickAway={() => setDropdown(false)}>
                     <div className='user-section is-hidden-touch' onClick={() => toggleDropdown()}>
                         <AccountCircle/>
-                        <span className='user-name'>Tarik Maljanovic</span>
+                        <span className='user-name'>{props.user?.first_name} {props.user?.last_name}</span>
                         <div className={`dropdown ${dropdown ? '' : 'is-hidden'}`}>
-                            <div className='dropdown-item'>
+                            <div onClick={() => {
+                                router.push('/profile')
+                            }} className='dropdown-item'>
                                 <span className='dropdown-text'>My Profile</span>
                                 <AccountCircle/>
                             </div>
-                            <div className='dropdown-item'>
+                            <div onClick={() => {
+                                router.push('/dashboard')
+                            }} className='dropdown-item'>
                                 <span className='dropdown-text'>Dashboard</span>
                                 <GridView />
                             </div>
-                            <div className='dropdown-item'>
+                            <div onClick={() => {
+                                    localStorage.clear()
+                                    router.push('/')
+                                }} className='dropdown-item'>
                                 <span className='dropdown-text'>Log out</span>
                                 <Logout />
                             </div>
@@ -43,11 +52,18 @@ export default function Navbar() {
             </div>
             <div className={`sidebar ${sidebar ? '' : 'hidden'}`}>
                 <span className='welcome'>Welcome:</span>
-                <span className='user-name'>Tarik Maljanovic</span>
+                <span className='user-name'>{props.user?.first_name} {props.user?.last_name}</span>
                 <div className='buttons'>
-                    <Button className='bttn'>My Profile <AccountCircle/></Button>
-                    <Button className='bttn'>Dashboard <GridView/></Button>
-                    <Button className='bttn'>Log out <Logout/></Button>
+                    <Button onClick={() => {
+                        router.push('/profile')
+                    }} className='bttn'>My Profile <AccountCircle/></Button>
+                    <Button onClick={() => {
+                        router.push('/dashboard')
+                    }} className='bttn'>Dashboard <GridView/></Button>
+                    <Button className='bttn' onClick={() => {
+                        localStorage.clear()
+                        router.push('/')
+                    }}>Log out <Logout/></Button>
                 </div>
             </div>
             <div onClick={() => setSidebar(false)} className={`back ${sidebar ? '' : 'is-hidden'}`}></div>

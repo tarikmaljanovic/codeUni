@@ -13,41 +13,43 @@ $accent: #FFD872;
 :root {
   box-sizing: border-box;
   font-family:'Roboto', sans-serif ;
+
+  .bttn {
+    justify-self: flex-end;
+    background-color: #FFD872;
+    color: #424242;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: none;
+    transition: 0.2s ease;
+    padding: 5px 30px
+  }
+  
+  .bttn:hover {
+    transition: 0.2s ease;
+    background-color: #f0c350;
+  }
+  
+  .bttn:active {
+    box-shadow: none;
+  }
+
+  body {
+    overflow: hidden;
+    margin: 0;
+  }
+  
+  .is-invisibe {
+    visibility: hidden;
+  }
+  
+  .link {
+    color: #0F4D90;
+    cursor: pointer;
+  }
 }
 
-body {
-  overflow: hidden;
-  margin: 0;
-}
 
-.is-invisibe {
-  visibility: hidden;
-}
-
-.link {
-  color: #0F4D90;
-  cursor: pointer;
-}
-
-.bttn {
-  justify-self: flex-end;
-  background-color: #FFD872;
-  color: #424242;
-  border-radius: 20px;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border: none;
-  transition: 0.2s ease;
-  padding: 5px 30px
-}
-
-.bttn:hover {
-  transition: 0.2s ease;
-  background-color: #f0c350;
-}
-
-.bttn:active {
-  box-shadow: none;
-}
 
 @keyframes translateX {
   0% {

@@ -2,8 +2,11 @@
 import '../styles/profile.scss'
 import { EmojiEvents, WorkspacePremium, Download } from '@mui/icons-material'
 import { Button } from '@mui/joy'
-import Navbar from "./navbar"
+import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import CourseList from './courseList'
+import axios from 'axios'
+import Navbar from "./navbar"
 import icon from '../../public/icon.svg'
 import js from '../../public/js.svg'
 import Image from 'next/image'
@@ -13,7 +16,7 @@ export default function ProfileUI() {
 
     return(
         <div className='container is-fluid px-5 profile-container'>
-            <Navbar />
+            
             <div className='section-title'>
                 Favourite Courses
             </div>
