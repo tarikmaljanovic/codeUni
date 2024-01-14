@@ -2,10 +2,9 @@
 import '../styles/dashboard.scss'
 import Image from 'next/image'
 import Navbar from './navbar'
-import icon from '../../public/icon.svg'
 import { Add, Code, Upload } from '@mui/icons-material'
 import { Box, SpeedDial, SpeedDialAction } from '@mui/material'
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Button from '@mui/joy/Button';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
@@ -71,7 +70,7 @@ export default function AdminDashboardUI(props) {
             <div className='section-title'>
                 Course List
             </div>
-            <CourseList courses={courses} />
+            <CourseList admin={true} courses={courses} />
             <div className='section-title'>
                 Badges
             </div>

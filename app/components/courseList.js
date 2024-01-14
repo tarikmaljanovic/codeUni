@@ -15,10 +15,13 @@ export default function CourseList(props) {
             <div className='columns is-multiline is-desktop course-list'>
                 {
                     courses?.map((item, index) => {
+                        if(item.deleted == 1) {
+                            return null;
+                        }
                         if(index < 6) {
                             return (
                                     <div key={index} className='column is-4 course-cell'>
-                                        <Link href={`course/${item.id}`}>
+                                        <Link href={`course/${props.admin ? item.id : item.course_id}`}>
                                             <div className='notification is-primary course-box'>
                                                 <span className='course-name'>
                                                     {item.course_title}
@@ -35,6 +38,9 @@ export default function CourseList(props) {
                 <div className={`columns is-multiline is-desktop course-list ${showMore ? '' : 'less'}`}>
                 {
                     courses?.map((item, index) => {
+                        if(item.deleted == 1) {
+                            return null;
+                        }
                         if(index > 6) {
                             return(
                                 <div key={index} className={`column is-4 course-cell`}>

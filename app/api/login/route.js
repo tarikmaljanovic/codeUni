@@ -26,7 +26,6 @@ export async function POST(request) {
    }
 
    delete user.password_hash
-   delete user.id
 
    const token = generateToken(user)
 

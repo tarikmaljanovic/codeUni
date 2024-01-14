@@ -22,12 +22,32 @@ $accent: #FFD872;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     border: none;
     transition: 0.2s ease;
-    padding: 5px 30px
+    padding: 5px 30px;
+  }
+
+  .bttn-danger {
+    justify-self: flex-end;
+    background-color: #ff5252;
+    color: white;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border: none;
+    transition: 0.2s ease;
+    padding: 5px 30px;
   }
   
   .bttn:hover {
     transition: 0.2s ease;
     background-color: #f0c350;
+  }
+  
+  .bttn-danger:active {
+    box-shadow: none;
+  }
+
+  .bttn-danger:hover {
+    transition: 0.2s ease;
+    background-color: #d44141;
   }
   
   .bttn:active {
