@@ -16,7 +16,7 @@ export default function ProfileUI() {
 
     return(
         <div className='container is-fluid px-5 profile-container'>
-            
+            <Navbar />
             <div className='section-title'>
                 Favourite Courses
             </div>

@@ -53,7 +53,7 @@ export default function CourseUI(props) {
     })
 
     useEffect(() => {
-        axios.post('/api/verify', {token: token}).then(res => {
+        axios.get(`/api/verify/${token}`).then(res => {
             if(res.data.message != 'valid') {
                 setToken(null)
             } else {
@@ -71,13 +71,6 @@ export default function CourseUI(props) {
         }
     }, [user, signal])
 
-    useEffect(() => {
-        if(token == null) {
-            localStorage.clear()
-            router.push('/')
-        }
-    }, [ ,token])
-
     const createLesson = () => {
         axios.post('/api/lessons/createLesson', lessonData).then(res => {
             setSignal(signal + 1)
@@ -92,7 +85,7 @@ export default function CourseUI(props) {
     }
 
     const deleteCourse = () => {
-        axios.post(`/api/courses/deleteCourse/${props.id}`, {token: token}).then(res => {
+        axios.put(`/api/courses/deleteCourse/${props.id}`, {token: token}).then(res => {
             router.push('/dashboard')
         })
     }
@@ -114,154 +107,159 @@ export default function CourseUI(props) {
         })
     }
 
-    return(
-        <div className='container is-fluid px-5 course-container'>
-            <Navbar user={user} />
-            <div className='section-title'>
-                <span className='text'>{course.course_title}</span>
-                <progress className="progress is-link" value={`${course.progress * 100}`} max="100">{course.progress * 100}%</progress>
-            </div>
-            <div className='columns is-multiline is-desktop course-list'>
-                {
-                    course?.lessons?.map((item, index) => {
-                        return (
-                            <div key={item.id} className='column is-12 course-cell lesson-cell'>
-                                <Link href={`/lesson/${item.id}`}>
-                                    <div className='notification course-box lesson-box'>
-                                        <div className='left'>
-                                            <ImportContacts />
-                                            <span>{item.lesson_title}</span>
+    if(token) {
+        return(
+            <div className='container is-fluid px-5 course-container'>
+                <Navbar user={user} />
+                <div className='section-title'>
+                    <span className='text'>{course.course_title}</span>
+                    <progress className="progress is-link" value={`${course.progress * 100}`} max="100">{course.progress * 100}%</progress>
+                </div>
+                <div className='columns is-multiline is-desktop course-list'>
+                    {
+                        course?.lessons?.map((item, index) => {
+                            return (
+                                <div key={item.id} className='column is-12 course-cell lesson-cell'>
+                                    <Link href={`/lesson/${item.id}`}>
+                                        <div className='notification course-box lesson-box'>
+                                            <div className='left'>
+                                                <ImportContacts />
+                                                <span>{item.lesson_title}</span>
+                                            </div>
+                                            <KeyboardArrowRight />
                                         </div>
-                                        <KeyboardArrowRight />
-                                    </div>
-                                </Link>
-                            </div>
-                        )
-                    })
-                }
-                {
-                    course?.projects?.map((item, index) => {
-                        return (
-                            <div key={item.id} className='column is-12 course-cell project-cell'>
-                                <Link href={`/project/${item.id}`}>
-                                    <div className='notification course-box project-box'>
-                                        <div className='left'>
-                                            <Code />
-                                            <span>{item.project_title}</span>
+                                    </Link>
+                                </div>
+                            )
+                        })
+                    }
+                    {
+                        course?.projects?.map((item, index) => {
+                            return (
+                                <div key={item.id} className='column is-12 course-cell project-cell'>
+                                    <Link href={`/project/${item.id}`}>
+                                        <div className='notification course-box project-box'>
+                                            <div className='left'>
+                                                <Code />
+                                                <span>{item.project_title}</span>
+                                            </div>
+                                            <KeyboardArrowRight />
                                         </div>
-                                        <KeyboardArrowRight />
-                                    </div>
-                                </Link>
-                            </div>
-                        )
-                    })
+                                    </Link>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+                <Button disabled={course.progress != 1} className='bttn'>Finish Course</Button>
+                {
+                    user?.admin ? (
+                        <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1, display: 'flex', alignSelf: 'flex-end' }}>
+                            <SpeedDial
+                                icon={<Add/>}
+                                ariaLabel="SpeedDial basic example"
+                                sx={{ position: 'absolute', bottom: 16, right: 16 }}
+                            >
+                                {actions.map((action) => (
+                                    <SpeedDialAction
+                                        key={action.name}
+                                        icon={action.icon}
+                                        tooltipTitle={action.name}
+                                        onClick={() => {
+                                            setAction(action.name)
+                                            action.open()
+                                        }}
+                                    />
+                                ))}
+                            </SpeedDial>
+                        </Box>
+                    ) : null
                 }
-            </div>
-            <Button disabled={course.progress != 1} className='bttn'>Finish Course</Button>
-            {
-                user?.admin ? (
-                    <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1, display: 'flex', alignSelf: 'flex-end' }}>
-                        <SpeedDial
-                            icon={<Add/>}
-                            ariaLabel="SpeedDial basic example"
-                            sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                        >
-                            {actions.map((action) => (
-                                <SpeedDialAction
-                                    key={action.name}
-                                    icon={action.icon}
-                                    tooltipTitle={action.name}
-                                    onClick={() => {
-                                        setAction(action.name)
-                                        action.open()
-                                    }}
+                <Modal open={open.lessonModule} onClose={() => setOpen({...open, lessonModule: false})}>
+                    <ModalDialog>
+                        <DialogTitle>{action}</DialogTitle>
+                        <DialogContent>Provide a name for the lesson.</DialogContent>
+                        <FormControl>
+                            <FormLabel>Name</FormLabel>
+                            <Input onChange={(e) => setLessonData({...lessonData, lesson_title: e.target.value})}/>
+                        </FormControl>
+                            <Button onClick={() => {
+                                createLesson()
+                                setOpen({...open, lessonModule: false})
+                            }} className='bttn' type="submit">Submit</Button>
+                    </ModalDialog>
+                </Modal>
+                <Modal open={open.projectModule} onClose={() => setOpen({...open, projectModule: false})}>
+                    <ModalDialog>
+                        <DialogTitle>{action}</DialogTitle>
+                        <DialogContent>Provide a name for the project.</DialogContent>
+                        <FormControl>
+                            <FormLabel>Name</FormLabel>
+                            <Input onChange={(e) => setProjectData({...projectData, project_title: e.target.value})}/>
+                        </FormControl>
+                            <Button onClick={() => {
+                                createProject()
+                                setOpen({...open, projectModule: false})
+                            }} className='bttn' type="submit">Submit</Button>
+                    </ModalDialog>
+                </Modal>
+                <Modal open={open.deleteModule} onClose={() => setOpen({...open, deleteModule: false})}>
+                    <ModalDialog>
+                        <DialogTitle>{action}</DialogTitle>
+                        <DialogContent>Are you sure you want to delete this course?</DialogContent>
+                            <Button onClick={() => {
+                                deleteCourse()
+                                setOpen({...open, deleteModule: false})
+                            }} className='bttn-danger' type="submit">Delete Course</Button>
+                            <Button onClick={() => {
+                                setOpen({...open, deleteModule: false})
+                            }} className='bttn' type="submit">Cancel</Button>
+                    </ModalDialog>
+                </Modal>
+                <Modal open={open.editModule} onClose={() => setOpen({...open, editModule: false})}>
+                    <ModalDialog>
+                    <DialogTitle>{action}</DialogTitle>
+                    <DialogContent>Provide a name and an image.</DialogContent>
+                    <form
+                        onSubmit={(event) => {
+                        event.preventDefault();
+                        setOpen({...open, editModule: false});
+                        }}
+                    >
+                        <Stack spacing={2}>
+                        <FormControl>
+                            <FormLabel>Name</FormLabel>
+                            <Input onChange={(e) => {setCourseData({...courseData, course_title: e.target.value})}} />
+                        </FormControl>
+                        <div className="file">
+                            <label className="file-label">
+                                <input 
+                                    onChange={(e) => {setCourseData({...courseData, course_image_data: e.target.files[0]})}}
+                                    className="file-input"
+                                    type="file"
+                                    name="resume"
                                 />
-                            ))}
-                        </SpeedDial>
-                    </Box>
-                ) : null
-            }
-            <Modal open={open.lessonModule} onClose={() => setOpen({...open, lessonModule: false})}>
-                <ModalDialog>
-                    <DialogTitle>{action}</DialogTitle>
-                    <DialogContent>Provide a name for the lesson.</DialogContent>
-                    <FormControl>
-                        <FormLabel>Name</FormLabel>
-                        <Input onChange={(e) => setLessonData({...lessonData, lesson_title: e.target.value})}/>
-                    </FormControl>
+                                <span className="file-cta">
+                                <span className="file-icon">
+                                    <Upload />
+                                </span>
+                                <span className="file-label">
+                                    Choose a file…
+                                </span>
+                                </span>
+                            </label>
+                        </div>
                         <Button onClick={() => {
-                            createLesson()
-                            setOpen({...open, lessonModule: false})
+                            editCourse()
                         }} className='bttn' type="submit">Submit</Button>
-                </ModalDialog>
-            </Modal>
-            <Modal open={open.projectModule} onClose={() => setOpen({...open, projectModule: false})}>
-                <ModalDialog>
-                    <DialogTitle>{action}</DialogTitle>
-                    <DialogContent>Provide a name for the project.</DialogContent>
-                    <FormControl>
-                        <FormLabel>Name</FormLabel>
-                        <Input onChange={(e) => setProjectData({...projectData, project_title: e.target.value})}/>
-                    </FormControl>
-                        <Button onClick={() => {
-                            createProject()
-                            setOpen({...open, projectModule: false})
-                        }} className='bttn' type="submit">Submit</Button>
-                </ModalDialog>
-            </Modal>
-            <Modal open={open.deleteModule} onClose={() => setOpen({...open, deleteModule: false})}>
-                <ModalDialog>
-                    <DialogTitle>{action}</DialogTitle>
-                    <DialogContent>Are you sure you want to delete this course?</DialogContent>
-                        <Button onClick={() => {
-                            deleteCourse()
-                            setOpen({...open, deleteModule: false})
-                        }} className='bttn-danger' type="submit">Delete Course</Button>
-                        <Button onClick={() => {
-                            setOpen({...open, deleteModule: false})
-                        }} className='bttn' type="submit">Cancel</Button>
-                </ModalDialog>
-            </Modal>
-            <Modal open={open.editModule} onClose={() => setOpen({...open, editModule: false})}>
-                <ModalDialog>
-                <DialogTitle>{action}</DialogTitle>
-                <DialogContent>Provide a name and an image.</DialogContent>
-                <form
-                    onSubmit={(event) => {
-                    event.preventDefault();
-                    setOpen({...open, editModule: false});
-                    }}
-                >
-                    <Stack spacing={2}>
-                    <FormControl>
-                        <FormLabel>Name</FormLabel>
-                        <Input onChange={(e) => {setCourseData({...courseData, course_title: e.target.value})}} />
-                    </FormControl>
-                    <div className="file">
-                        <label className="file-label">
-                            <input 
-                                onChange={(e) => {setCourseData({...courseData, course_image_data: e.target.files[0]})}}
-                                className="file-input"
-                                type="file"
-                                name="resume"
-                            />
-                            <span className="file-cta">
-                            <span className="file-icon">
-                                <Upload />
-                            </span>
-                            <span className="file-label">
-                                Choose a file…
-                            </span>
-                            </span>
-                        </label>
-                    </div>
-                    <Button onClick={() => {
-                        editCourse()
-                    }} className='bttn' type="submit">Submit</Button>
-                    </Stack>
-                </form>
-                </ModalDialog>
-            </Modal>
-        </div>
-    )
+                        </Stack>
+                    </form>
+                    </ModalDialog>
+                </Modal>
+            </div>
+        )
+    } else {
+        localStorage.clear()
+        router.push('/')
+    }
 }

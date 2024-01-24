@@ -1,7 +1,7 @@
 import LessonUI from "@/app/components/lesson"
 
-export default function Lesson() {
+export default function Lesson({ params }) {
     return(
-        <LessonUI />
+        <LessonUI id={params.id} />
     )
 }

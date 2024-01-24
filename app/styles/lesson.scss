@@ -12,4 +12,29 @@
     align-items: center;
     overflow-y:scroll;
     overflow-x: hidden;
+
+    .lesson-content {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        @include touch {
+            width: 100%;
+        }
+        .lesson-title {
+            width: 100%;
+            font-size: 25px;
+            font-weight: 600; 
+            font-family: 'Roboto';
+            margin-bottom: 25px;
+        }
+        .section-title {
+            width: 100%;
+            font-size: 20px;
+            font-weight: 500; 
+            font-family: 'Roboto';
+        }
+
+    }
 }

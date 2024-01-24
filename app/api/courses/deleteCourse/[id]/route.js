@@ -2,7 +2,7 @@ import connection from '../../../db';
 import { verifyToken } from "../../../jwt";
 import { NextResponse } from "next/server";
 
-export async function POST(request, { params }) {
+export async function PUT(request, { params }) {
     const data = await request.json()
     const user = verifyToken(data.token)
 

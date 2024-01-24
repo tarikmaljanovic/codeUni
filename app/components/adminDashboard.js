@@ -26,10 +26,11 @@ export default function AdminDashboardUI(props) {
     const [signal, setSignal] = useState(0)
     const [courses, setCourses] = useState([])
     const [badges, setBadges] = useState([])
+    const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
     const[courseData, setCourseData] = useState({
         course_title: '',
         course_image_data: null,
-        token: JSON.parse(localStorage.getItem('token'))
+        token: token
     })
 
     const createCourse = () => {
@@ -41,7 +42,7 @@ export default function AdminDashboardUI(props) {
             axios.post('api/courses/createCourse', {
                 course_title: courseData.course_title,
                 course_image_url: res.data.url,
-                token: courseData.token
+                token: token
             }).then(res => {
                 setSignal(signal+1)
             })
@@ -49,21 +50,17 @@ export default function AdminDashboardUI(props) {
     }
 
     useEffect(() => {
-        axios.post('api/courses/getCourses', {
-            token: courseData.token
-        }).then(res => {
+        axios.get(`api/courses/getCourses/${token}`).then(res => {
             setCourses(res.data)
         })
-    }, [ ,signal])
+    }, [signal])
 
     useEffect(() => {
-        axios.post('api/badges/getBadges', {
-            token: courseData.token
-        }).then(res => {
+        axios.get(`api/badges/getBadges/${token}`).then(res => {
             setBadges(res.data)
         })
-    }, [])
-      
+    }, [token])
+
     return(
         <div className='container is-fluid px-5 dashboard-container'>
             <Navbar user={props.user} />
@@ -80,7 +77,7 @@ export default function AdminDashboardUI(props) {
                         return(
                             <div key={index} className='column is-4 badge-cell'>
                                 <div className='notification badge-box'>
-                                    <Image src={item.badge_image_url} width={100} height={100} />
+                                    <Image alt='badge-icon' src={item.badge_image_url} width={100} height={100} />
                                     <div className='description-section'>
                                         <p className='badge-name'>{item.badge_name}</p>
                                         <p className='badge-description'>

@@ -4,10 +4,8 @@ import Jwt  from "jsonwebtoken";
 
 const secret = 'wO4k7kzoHP'
 
-export async function POST(request) {
-    const data = await request.json()
-    const token = data.token
-    
+export async function GET(request, { params }) {
+    const token = params.token
 
     try {
         const decode = Jwt.decode(token, secret, {algoright: ['HS256']})
