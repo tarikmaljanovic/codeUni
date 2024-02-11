@@ -21,7 +21,7 @@ export default function CourseList(props) {
                         if(index < 6) {
                             return (
                                     <div key={index} className='column is-4 course-cell'>
-                                        <Link href={`course/${props.admin ? item.id : item.course_id}`}>
+                                        <Link href={`course/${item.id}`}>
                                             <div className='notification is-primary course-box'>
                                                 <span className='course-name'>
                                                     {item.course_title}

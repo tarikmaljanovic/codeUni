@@ -15,7 +15,8 @@ export async function GET(request, { params }) {
                                                 JOIN user_courses uc ON uc.user_id = u.id 
                                                 WHERE uc.certificate = 1
                                                 GROUP BY u.id
-                                                ORDER BY 'courses', 'badges' DESC`)
+                                                ORDER BY 'courses', 'badges' DESC
+                                                LIMIT 10`)
     return NextResponse.json((await result)[0])
 
 }

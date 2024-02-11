@@ -1,6 +1,6 @@
 @import 'bulma';
 
-.lesson-container {
+.project-container {
     width: 100vw;
     height: 100dvh;
     background-image: url('../../public/dashboard_background.png');
@@ -13,7 +13,7 @@
     overflow-y:scroll;
     overflow-x: hidden;
 
-    .lesson-content {
+    .project-content {
         width: 80%;
         display: flex;
         flex-direction: column;
@@ -22,14 +22,14 @@
         @include touch {
             width: 100%;
         }
-        .lesson-title {
+        .project-title {
             width: 100%;
             font-size: 25px;
             font-weight: 600; 
             font-family: 'Roboto';
             margin-bottom: 25px;
         }
-        .lesson-section {
+        .project-section {
             width: 100%;
             h1 {
                 font-size: 20px;
@@ -41,4 +41,5 @@
         }
 
     }
+
 }

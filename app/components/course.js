@@ -1,7 +1,7 @@
 'use client'
 import '../styles/course.scss'
-import { ImportContacts, KeyboardArrowRight, Code, Add, Delete, Edit, Upload } from '@mui/icons-material'
-import { Box, SpeedDial, SpeedDialAction } from '@mui/material'
+import { ImportContacts, KeyboardArrowRight, Code, Add, Delete, Edit, Upload, Favorite, FavoriteBorder } from '@mui/icons-material'
+import { Box, SpeedDial, SpeedDialAction, Checkbox } from '@mui/material'
 import { Button } from '@mui/joy'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -18,6 +18,7 @@ import Navbar from './navbar'
 import Link from 'next/link'
 
 export default function CourseUI(props) {
+    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const router = useRouter()
     const [action, setAction] = useState('')
     const [signal, setSignal] = useState(0)
@@ -112,7 +113,10 @@ export default function CourseUI(props) {
             <div className='container is-fluid px-5 course-container'>
                 <Navbar user={user} />
                 <div className='section-title'>
-                    <span className='text'>{course.course_title}</span>
+                    <div>
+                        <span className='text'>{course.course_title}</span>
+                        <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
+                    </div>
                     <progress className="progress is-link" value={`${course.progress * 100}`} max="100">{course.progress * 100}%</progress>
                 </div>
                 <div className='columns is-multiline is-desktop course-list'>
@@ -175,87 +179,103 @@ export default function CourseUI(props) {
                         </Box>
                     ) : null
                 }
-                <Modal open={open.lessonModule} onClose={() => setOpen({...open, lessonModule: false})}>
-                    <ModalDialog>
-                        <DialogTitle>{action}</DialogTitle>
-                        <DialogContent>Provide a name for the lesson.</DialogContent>
-                        <FormControl>
-                            <FormLabel>Name</FormLabel>
-                            <Input onChange={(e) => setLessonData({...lessonData, lesson_title: e.target.value})}/>
-                        </FormControl>
-                            <Button onClick={() => {
-                                createLesson()
-                                setOpen({...open, lessonModule: false})
-                            }} className='bttn' type="submit">Submit</Button>
-                    </ModalDialog>
-                </Modal>
-                <Modal open={open.projectModule} onClose={() => setOpen({...open, projectModule: false})}>
-                    <ModalDialog>
-                        <DialogTitle>{action}</DialogTitle>
-                        <DialogContent>Provide a name for the project.</DialogContent>
-                        <FormControl>
-                            <FormLabel>Name</FormLabel>
-                            <Input onChange={(e) => setProjectData({...projectData, project_title: e.target.value})}/>
-                        </FormControl>
-                            <Button onClick={() => {
-                                createProject()
-                                setOpen({...open, projectModule: false})
-                            }} className='bttn' type="submit">Submit</Button>
-                    </ModalDialog>
-                </Modal>
-                <Modal open={open.deleteModule} onClose={() => setOpen({...open, deleteModule: false})}>
-                    <ModalDialog>
-                        <DialogTitle>{action}</DialogTitle>
-                        <DialogContent>Are you sure you want to delete this course?</DialogContent>
-                            <Button onClick={() => {
-                                deleteCourse()
-                                setOpen({...open, deleteModule: false})
-                            }} className='bttn-danger' type="submit">Delete Course</Button>
-                            <Button onClick={() => {
-                                setOpen({...open, deleteModule: false})
-                            }} className='bttn' type="submit">Cancel</Button>
-                    </ModalDialog>
-                </Modal>
-                <Modal open={open.editModule} onClose={() => setOpen({...open, editModule: false})}>
-                    <ModalDialog>
-                    <DialogTitle>{action}</DialogTitle>
-                    <DialogContent>Provide a name and an image.</DialogContent>
-                    <form
-                        onSubmit={(event) => {
-                        event.preventDefault();
-                        setOpen({...open, editModule: false});
-                        }}
-                    >
-                        <Stack spacing={2}>
-                        <FormControl>
-                            <FormLabel>Name</FormLabel>
-                            <Input onChange={(e) => {setCourseData({...courseData, course_title: e.target.value})}} />
-                        </FormControl>
-                        <div className="file">
-                            <label className="file-label">
-                                <input 
-                                    onChange={(e) => {setCourseData({...courseData, course_image_data: e.target.files[0]})}}
-                                    className="file-input"
-                                    type="file"
-                                    name="resume"
-                                />
-                                <span className="file-cta">
-                                <span className="file-icon">
-                                    <Upload />
-                                </span>
-                                <span className="file-label">
-                                    Choose a file…
-                                </span>
-                                </span>
-                            </label>
-                        </div>
-                        <Button onClick={() => {
-                            editCourse()
-                        }} className='bttn' type="submit">Submit</Button>
-                        </Stack>
-                    </form>
-                    </ModalDialog>
-                </Modal>
+                {
+                    user?.admin ? (
+                        <Modal open={open.lessonModule} onClose={() => setOpen({...open, lessonModule: false})}>
+                            <ModalDialog>
+                                <DialogTitle>{action}</DialogTitle>
+                                <DialogContent>Provide a name for the lesson.</DialogContent>
+                                <FormControl>
+                                    <FormLabel>Name</FormLabel>
+                                    <Input onChange={(e) => setLessonData({...lessonData, lesson_title: e.target.value})}/>
+                                </FormControl>
+                                    <Button onClick={() => {
+                                        createLesson()
+                                        setOpen({...open, lessonModule: false})
+                                    }} className='bttn' type="submit">Submit</Button>
+                            </ModalDialog>
+                        </Modal>
+                    ) : null
+                }
+                {
+                    user?.admin ? (
+                        <Modal open={open.projectModule} onClose={() => setOpen({...open, projectModule: false})}>
+                            <ModalDialog>
+                                <DialogTitle>{action}</DialogTitle>
+                                <DialogContent>Provide a name for the project.</DialogContent>
+                                <FormControl>
+                                    <FormLabel>Name</FormLabel>
+                                    <Input onChange={(e) => setProjectData({...projectData, project_title: e.target.value})}/>
+                                </FormControl>
+                                    <Button onClick={() => {
+                                        createProject()
+                                        setOpen({...open, projectModule: false})
+                                    }} className='bttn' type="submit">Submit</Button>
+                            </ModalDialog>
+                        </Modal>
+                    ) : null
+                }
+                {
+                    user?.admin ? (
+                        <Modal open={open.deleteModule} onClose={() => setOpen({...open, deleteModule: false})}>
+                            <ModalDialog>
+                                <DialogTitle>{action}</DialogTitle>
+                                <DialogContent>Are you sure you want to delete this course?</DialogContent>
+                                    <Button onClick={() => {
+                                        deleteCourse()
+                                        setOpen({...open, deleteModule: false})
+                                    }} className='bttn-danger' type="submit">Delete Course</Button>
+                                    <Button onClick={() => {
+                                        setOpen({...open, deleteModule: false})
+                                    }} className='bttn' type="submit">Cancel</Button>
+                            </ModalDialog>
+                        </Modal>
+                    ) : null
+                }
+                {
+                    user?.admin ? (
+                        <Modal open={open.editModule} onClose={() => setOpen({...open, editModule: false})}>
+                            <ModalDialog>
+                            <DialogTitle>{action}</DialogTitle>
+                            <DialogContent>Provide a name and an image.</DialogContent>
+                            <form
+                                onSubmit={(event) => {
+                                event.preventDefault();
+                                setOpen({...open, editModule: false});
+                                }}
+                            >
+                                <Stack spacing={2}>
+                                <FormControl>
+                                    <FormLabel>Name</FormLabel>
+                                    <Input onChange={(e) => {setCourseData({...courseData, course_title: e.target.value})}} />
+                                </FormControl>
+                                <div className="file">
+                                    <label className="file-label">
+                                        <input 
+                                            onChange={(e) => {setCourseData({...courseData, course_image_data: e.target.files[0]})}}
+                                            className="file-input"
+                                            type="file"
+                                            name="resume"
+                                        />
+                                        <span className="file-cta">
+                                        <span className="file-icon">
+                                            <Upload />
+                                        </span>
+                                        <span className="file-label">
+                                            Choose a file…
+                                        </span>
+                                        </span>
+                                    </label>
+                                </div>
+                                <Button onClick={() => {
+                                    editCourse()
+                                }} className='bttn' type="submit">Submit</Button>
+                                </Stack>
+                            </form>
+                            </ModalDialog>
+                        </Modal>
+                    ) : null
+                }
             </div>
         )
     } else {

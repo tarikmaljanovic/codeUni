@@ -30,6 +30,7 @@ export default function DashboardUI() {
     useEffect(() => {
         axios.get(`api/courses/getCourses/${token}`).then(res => {
             setCourses(res.data)
+            console.log(res.data)
         })
     }, [token])
 
