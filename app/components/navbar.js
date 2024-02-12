@@ -18,7 +18,7 @@ export default function Navbar(props) {
     return(
         <>
             <div className="nav-container">
-                <div className='title is-mobile'>
+                <div style={{cursor: 'pointer'}} onClick={() => router.push('/dashboard')} className='title is-mobile'>
                     codeuni
                 </div>
                 <ClickAwayListener onClickAway={() => setDropdown(false)}>

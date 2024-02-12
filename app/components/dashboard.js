@@ -12,39 +12,32 @@ import { useEffect, useState } from 'react'
 export default function DashboardUI() {
     const router = useRouter()
     const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [courses, setCourses] = useState([])
     const [badges, setBadges] = useState([])
     const [leaderboard, setLeaderboard] = useState([])
 
     useEffect(() => {
-        axios.get(`/api/verify/${token}`).then(res => {
-            if(res.data.message != 'valid') {
-                setToken(null)
-            } else {
-                setUser(res.data.payload)
-            }
-        })
-    }, [token])
+        if(!user.admin) {
+            axios.get(`http://localhost:8000/courses/userCourses/${user.id}`).then(res => {
+                setCourses(res.data)
+            }).catch(err => {
+                console.log(err)
+            })
 
-    useEffect(() => {
-        axios.get(`api/courses/getCourses/${token}`).then(res => {
-            setCourses(res.data)
-            console.log(res.data)
-        })
-    }, [token])
-
-    useEffect(() => {
-        axios.get(`api/badges/getBadges/${token}`).then(res => {
-            setBadges(res.data)
-        })
-    }, [token])
-
-    useEffect(() => {
-        axios.get(`api/leaderboard/${token}`).then(res => {
-            setLeaderboard(res.data)
-        })
-    }, [token])
+            axios.get(`http://localhost:8000/badges/userBadges/${user.id}`).then(res => {
+                setBadges(res.data)
+            }).catch(err => {
+                console.log(err)
+            })
+            
+            axios.get('http://localhost:8000/users/leaderboard').then(res => {
+                setLeaderboard(res.data)
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }, [])
 
     if(token) {
         if(user?.admin) {
@@ -80,7 +73,7 @@ export default function DashboardUI() {
                                         </div>
                                     )
                                 }
-                            })
+                            }) || null
                         }
                         {
                             badges.length == 0 ? (
@@ -114,7 +107,7 @@ export default function DashboardUI() {
                                             <span className='badge-count'>{item.badges}</span>
                                         </div>
                                     )
-                                })
+                                }) || null
                             }
                         </div>
                             {

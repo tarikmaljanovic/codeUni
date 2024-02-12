@@ -24,33 +24,23 @@ export default function ProjectUI(props) {
     const [open, setOpen] = useState({deleteModule: false, editModule: false})
     const [action, setAction] = useState('')
     const router = useRouter()
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [project, setProject] = useState({})
     const [content, setContent] = useState('')
     const [projectName, setProjectName] = useState('')
     const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
 
     useEffect(() => {
-        axios.get(`/api/verify/${token}`).then(res => {
-            if(res.data.message != 'valid') {
-                setToken(null)
-            } else {
-                setUser(res.data.payload)
-            }
-        })
-    }, [])
-
-    useEffect(() => {
-        axios.get(`/api/projects/getProject/${props.id}`).then(res => {
+        axios.get(`http://localhost:8000/projects/byId/${props.id}`).then(res => {
             setProject(res.data)
-            setContent(res.data.project_content.content)
+            setContent(JSON.parse(res.data.project_content).content)
         }).catch(err => {
             console.log(err)
         })
     }, [])
 
     const handleDeleteProject = () => {
-        axios.delete(`/api/projects/deleteProject/${props.id}/${token}`).then(res => {
+        axios.put(`http://localhost:8000/projects/deleteProject/${props.id}`, {token: token}).then(res => {
             router.push(`/course/${project.course_id}`)
         }).catch(err => {
             console.log(err)
@@ -58,13 +48,10 @@ export default function ProjectUI(props) {
     }
 
     const handleNameChange = () => {
-        const data = {
+        axios.put(`http://localhost:8000/projects/updateProject/${props.id}`, {
             token: JSON.parse(localStorage.getItem('token')),
             project_title: projectName,
-            id: props.id
-        }
-        axios.put('/api/projects/updateProjectName', data).then(res => {
-            console.log(res.data)
+        }).then(res => {
             setProject({...project, project_title: projectName})
         }).catch(err => {
             console.log(err)

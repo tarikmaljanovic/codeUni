@@ -3,7 +3,7 @@
 
 @font-face {
   font-family: 'ubuntu-title';
-  src: url('../public/fonts/Ubuntu-Title.ttf');
+  src: url('/Ubuntu-Title.ttf') format('truetype');
 }
 
 $primary: #0F4D90;

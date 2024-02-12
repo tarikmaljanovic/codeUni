@@ -21,10 +21,10 @@ export default function CourseUI(props) {
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
     const router = useRouter()
     const [action, setAction] = useState('')
-    const [signal, setSignal] = useState(0)
     const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [course, setCourse] = useState({})
+    const [isFavorite, setIsFavorite] = useState(null)
     const [open, setOpen] = useState({
         lessonModule: false,
         projectModule: false,
@@ -53,71 +53,84 @@ export default function CourseUI(props) {
         token: token
     })
 
-    useEffect(() => {
-        axios.get(`/api/verify/${token}`).then(res => {
-            if(res.data.message != 'valid') {
-                setToken(null)
-            } else {
-                setUser(res.data.payload)                
-            }
-        })
-    }, [])
 
     useEffect(() => {
         if(user.id) {
-            axios.get(`/api/courses/getCourse/${props.id}/${user.id}`).then(res => {
+            axios.get(`http://localhost:8000/courses/byId/${props.id}/${user.id}`).then(res => {
                 setCourse(res.data)
-                console.log(res.data)
+                setIsFavorite(res.data.course.UserCour.starred)
             })
         }
-    }, [user, signal])
+    }, [])
 
     const createLesson = () => {
-        axios.post('/api/lessons/createLesson', lessonData).then(res => {
-            setSignal(signal + 1)
+        axios.post('http://localhost:8000/lessons/createLesson', lessonData).then(res => {
+            setCourse({...course, lessons: [...course.lessons, res.data]})
+        }).catch(err => {
+            console.log(err)
         })
     }
 
     const createProject = () => {
-        console.log(projectData)
-        axios.post('/api/projects/createProject', projectData).then(res => {
-            setSignal(signal + 1)
+        axios.post('http://localhost:8000/projects/createProject', projectData).then(res => {
+            setCourse({...course, projects: [...course.projects, res.data]})
+        }).catch(err => {
+            console.log(err)
         })
     }
 
-    const deleteCourse = () => {
-        axios.put(`/api/courses/deleteCourse/${props.id}`, {token: token}).then(res => {
+    const handleDeleteCourse = () => {
+        axios.put(`http://localhost:8000/courses/deleteCourse/${props.id}`, {
+            token: token
+        }).then(res => {
             router.push('/dashboard')
+        }).catch(err => {
+            console.log(err)
         })
     }
 
-    const editCourse = () => {
+    const handleEditCourse = () => {
         const form = new FormData()
         form.append('file', courseData.course_image_data)
         form.append('upload_preset', 'tariksdp');
 
         axios.post('https://api-eu.cloudinary.com/v1_1/ds2qt32nd/image/upload', form).then(res => {
-            axios.put('/api/courses/editCourse', {
+            axios.put(`http://localhost:8000/courses/updateCourse/${props.id}`, {
                 course_id: props.id,
                 course_title: courseData.course_title,
                 course_image_url: res.data.url,
                 token: token
             }).then(res => {
-                setSignal(signal + 1)
+                setCourse({...course, course_title: res.data.course_title})
+            }).catch(err => {
+                console.log(err)
             })
         })
     }
 
+    const handleFavorite = () => {
+        setIsFavorite(!isFavorite)
+        axios.put('http://localhost:8000/courses/favoriteCourse', {
+            course_id: props.id,
+            user_id: user.id,
+            favorite: isFavorite
+        }).then(res => {
+            console.log(res.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     if(token) {
-        return(
+         return(
             <div className='container is-fluid px-5 course-container'>
                 <Navbar user={user} />
                 <div className='section-title'>
                     <div>
-                        <span className='text'>{course.course_title}</span>
-                        <Checkbox {...label} icon={<FavoriteBorder />} checkedIcon={<Favorite />} />
+                        <span className='text'>{course?.course?.course_title || 'Loading...'}</span>
+                        <Checkbox {...label} onClick={handleFavorite} icon={<Favorite color={`${isFavorite ? 'primary' : 'disabled'}`} />} checkedIcon={<Favorite />} />
                     </div>
-                    <progress className="progress is-link" value={`${course.progress * 100}`} max="100">{course.progress * 100}%</progress>
+                    <progress className="progress is-link" value={`${course?.course?.UserCour?.progress * 100 || 0}`} max="100">{course?.course?.UserCour?.progress * 100 || 0}%</progress>
                 </div>
                 <div className='columns is-multiline is-desktop course-list'>
                     {
@@ -155,7 +168,7 @@ export default function CourseUI(props) {
                         })
                     }
                 </div>
-                <Button disabled={course.progress != 1} className='bttn'>Finish Course</Button>
+                <Button disabled={course?.course?.UserCour?.progress != 1 || 0} className='bttn'>Finish Course</Button>
                 {
                     user?.admin ? (
                         <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1, display: 'flex', alignSelf: 'flex-end' }}>
@@ -222,7 +235,7 @@ export default function CourseUI(props) {
                                 <DialogTitle>{action}</DialogTitle>
                                 <DialogContent>Are you sure you want to delete this course?</DialogContent>
                                     <Button onClick={() => {
-                                        deleteCourse()
+                                        handleDeleteCourse()
                                         setOpen({...open, deleteModule: false})
                                     }} className='bttn-danger' type="submit">Delete Course</Button>
                                     <Button onClick={() => {
@@ -268,7 +281,7 @@ export default function CourseUI(props) {
                                     </label>
                                 </div>
                                 <Button onClick={() => {
-                                    editCourse()
+                                    handleEditCourse()
                                 }} className='bttn' type="submit">Submit</Button>
                                 </Stack>
                             </form>

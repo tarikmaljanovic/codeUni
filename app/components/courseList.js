@@ -32,7 +32,7 @@ export default function CourseList(props) {
                                     </div>
                             )
                         }
-                    })
+                    }) || null
                     }
                 </div>
                 <div className={`columns is-multiline is-desktop course-list ${showMore ? '' : 'less'}`}>

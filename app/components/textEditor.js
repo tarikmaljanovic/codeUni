@@ -9,12 +9,10 @@ export default function TextEditor(props) {
   const [content, setContent] = useState(props.content);
 
   const handleLessonUpdate = () => {
-    const data = {
+    axios.put(`http://localhost:8000/lessons/updateLessonContent/${props.id}`, {
       token: JSON.parse(localStorage.getItem('token')),
       content: content,
-      id: props.id
-    }
-    axios.post('/api/lessons/updateLesson', data).then(res => {
+    }).then(res => {
       console.log(res.data)
     }).catch(err => {
       console.log(err)
@@ -22,12 +20,10 @@ export default function TextEditor(props) {
   }
 
   const handleProjectUpdate = () => {
-    const data = {
+    axios.put(`http://localhost:8000/projects/updateProjectContent/${props.id}`, {
       token: JSON.parse(localStorage.getItem('token')),
       content: content,
-      id: props.id
-    }
-    axios.put('/api/projects/updateProject', data).then(res => {
+    }).then(res => {
       console.log(res.data)
     }).catch(err => {
       console.log(err)

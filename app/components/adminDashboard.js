@@ -23,7 +23,6 @@ export default function AdminDashboardUI(props) {
     ];
     const [action, setAction] = useState('')
     const [open, setOpen] = useState(false)
-    const [signal, setSignal] = useState(0)
     const [courses, setCourses] = useState([])
     const [badges, setBadges] = useState([])
     const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
@@ -33,33 +32,35 @@ export default function AdminDashboardUI(props) {
         token: token
     })
 
-    const createCourse = () => {
+    const handleCreateCourse = () => {
         const form = new FormData()
         form.append('file', courseData.course_image_data)
         form.append('upload_preset', 'tariksdp');
 
         axios.post('https://api-eu.cloudinary.com/v1_1/ds2qt32nd/image/upload', form).then(res => {
-            axios.post('api/courses/createCourse', {
+            axios.post('http://localhost:8000/courses/createCourse', {
                 course_title: courseData.course_title,
                 course_image_url: res.data.url,
                 token: token
             }).then(res => {
-                setSignal(signal+1)
+                setCourses([...courses, res.data])
             })
         })
     }
 
     useEffect(() => {
-        axios.get(`api/courses/getCourses/${token}`).then(res => {
+        axios.get('http://localhost:8000/courses/').then(res => {
             setCourses(res.data)
+        }).catch(err => {
+            console.log(err)
         })
-    }, [signal])
 
-    useEffect(() => {
-        axios.get(`api/badges/getBadges/${token}`).then(res => {
+        axios.get('http://localhost:8000/badges/').then(res => {
             setBadges(res.data)
+        }).catch(err => {
+            console.log(err)
         })
-    }, [token])
+    }, [])
 
     return(
         <div className='container is-fluid px-5 dashboard-container'>
@@ -87,7 +88,7 @@ export default function AdminDashboardUI(props) {
                                 </div>
                             </div>
                         )
-                    })
+                    }) || null
                 }
             </div>
             <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1, display: 'flex', alignSelf: 'flex-end' }}>
@@ -115,8 +116,8 @@ export default function AdminDashboardUI(props) {
                 <DialogContent>Provide a name and an image.</DialogContent>
                 <form
                     onSubmit={(event) => {
-                    event.preventDefault();
-                    setOpen(false);
+                        event.preventDefault();
+                        setOpen(false);
                     }}
                 >
                     <Stack spacing={2}>
@@ -145,7 +146,7 @@ export default function AdminDashboardUI(props) {
                         </label>
                     </div>
                     <Button onClick={() => {
-                        createCourse(courseData)
+                        handleCreateCourse(courseData)
                     }} className='bttn' type="submit">Submit</Button>
                     </Stack>
                 </form>

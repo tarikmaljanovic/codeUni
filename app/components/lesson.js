@@ -26,31 +26,23 @@ export default function LessonUI(props) {
     const router = useRouter()
     const [lesson, setLesson] = useState({})
     const [content, setContent] = useState('')
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
     const [lessonData, setLessonData] = useState({
         lesson_title: lesson.lesson_title
     })
 
     useEffect(() => {
-        axios.get(`/api/lessons/getLesson/${props.id}`).then(res => {
+        axios.get(`http://localhost:8000/lessons/byId/${props.id}`).then(res => {
             setLesson(res.data)
-            setContent(res.data.lesson_content.content)
-        })
-    }, [])
-
-    useEffect(() => {
-        axios.get(`/api/verify/${token}`).then(res => {
-            if(res.data.message != 'valid') {
-                setToken(null)
-            } else {
-                setUser(res.data.payload)
-            }
+            setContent(JSON.parse(res.data.lesson_content).content)
+        }).catch(err => {
+            console.log(err)
         })
     }, [])
 
     const handleDeleteLesson = () => {
-        axios.delete(`/api/lessons/deleteLesson/${props.id}/${token}`).then(res => {
+        axios.put(`http://localhost:8000/lessons/deleteLesson/${props.id}`, {token: token}).then(res => {
             router.push(`/course/${lesson.course_id}`)
         }).catch(err => {
             console.log(err)
@@ -63,8 +55,7 @@ export default function LessonUI(props) {
             lesson_title: lessonData.lesson_title,
             id: props.id
         }
-        axios.put('/api/lessons/updateLessonName', data).then(res => {
-            console.log(res.data)
+        axios.put(`http://localhost:8000/lessons/updateLesson/${props.id}`, data).then(res => {
             setLesson({...lesson, lesson_title: lessonData.lesson_title})
         }).catch(err => {
             console.log(err)
