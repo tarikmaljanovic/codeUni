@@ -1,0 +1,67 @@
+@import 'bulma';
+
+.quiz-container {
+    margin-top: 30px;
+    margin-bottom: 100px;
+    border: 2px solid #FFD872;
+    border-radius: 20px;
+    width: 100%;
+    padding: 30px;
+
+    @include touch {
+        padding: 20px;
+    }
+
+    .question {
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .answers {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+        margin-bottom: 10px;
+
+        .answer {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            label {
+                margin-left: 10px;
+            }
+        }
+    }
+
+    .correct {
+        background-color: #86e09b;
+        border-radius: 5px;
+        margin: 10px 0px;
+    }
+
+    .wrong {
+        background-color: #e08686;
+        border-radius: 5px;
+        margin: 10px 0px;
+    }
+
+    .result-text {
+        font-weight: 600;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .button-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        .bttn {
+            margin-right: 15px;
+        }
+    }
+
+    .new-question {
+        margin-bottom: 30px;
+    }
+}

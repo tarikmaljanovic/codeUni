@@ -58,7 +58,7 @@ export default function CourseUI(props) {
         if(user.id) {
             axios.get(`http://localhost:8000/courses/byId/${props.id}/${user.id}`).then(res => {
                 setCourse(res.data)
-                setIsFavorite(res.data.course.UserCour.starred)
+                setIsFavorite(res?.data?.course?.UserCour?.starred)
             })
         }
     }, [])
@@ -109,7 +109,6 @@ export default function CourseUI(props) {
     }
 
     const handleFavorite = () => {
-        setIsFavorite(!isFavorite)
         axios.put('http://localhost:8000/courses/favoriteCourse', {
             course_id: props.id,
             user_id: user.id,
@@ -128,7 +127,7 @@ export default function CourseUI(props) {
                 <div className='section-title'>
                     <div>
                         <span className='text'>{course?.course?.course_title || 'Loading...'}</span>
-                        <Checkbox {...label} onClick={handleFavorite} icon={<Favorite color={`${isFavorite ? 'primary' : 'disabled'}`} />} checkedIcon={<Favorite />} />
+                        <Checkbox {...label} onClick={() => {setIsFavorite(!isFavorite); handleFavorite()}} icon={<Favorite color={`${isFavorite ? 'primary' : 'disabled'}`} />} checkedIcon={<Favorite />} />
                     </div>
                     <progress className="progress is-link" value={`${course?.course?.UserCour?.progress * 100 || 0}`} max="100">{course?.course?.UserCour?.progress * 100 || 0}%</progress>
                 </div>
@@ -168,7 +167,11 @@ export default function CourseUI(props) {
                         })
                     }
                 </div>
-                <Button disabled={course?.course?.UserCour?.progress != 1 || 0} className='bttn'>Finish Course</Button>
+                {
+                    user?.admin ? null : (
+                        <Button disabled={course?.course?.UserCour?.progress != 1} className='bttn'>Finish Course</Button>
+                    )
+                }
                 {
                     user?.admin ? (
                         <Box sx={{ height: 320, transform: 'translateZ(0px)', flexGrow: 1, display: 'flex', alignSelf: 'flex-end' }}>

@@ -15,6 +15,7 @@ import { Button } from '@mui/joy'
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
+import Quiz from './quiz'
 
 export default function LessonUI(props) {
     const actions = [
@@ -85,8 +86,10 @@ export default function LessonUI(props) {
                                             src="https://onecompiler.com/embed/javascript" 
                                             width="100%"
                                         />
-                                    </>)
+                                    </>
+                                )
                         }
+                        <Quiz id={props.id} />
                     </div>
                 </div>
                 {

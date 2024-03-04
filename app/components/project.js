@@ -78,6 +78,7 @@ export default function ProjectUI(props) {
                             )
                         }
                     </div>
+                    <Button style={{margin: 'auto', marginTop: '20px'}} className='bttn'>Finish Project</Button>
                 </div>
                 {
                     user.admin ? (

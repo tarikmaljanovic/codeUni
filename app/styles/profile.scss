@@ -18,6 +18,23 @@
         font-weight: 600;
         font-family: 'Roboto';
         margin-bottom: 15px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .user-tag {
+            background-color: #5d90c7;
+            font-size: 20px;
+            color: white;
+            padding: 5px 10px;
+            margin-left: 5px;
+            border-radius: 15px;
+            box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+            @include mobile {
+                font-size: 14px;
+            
+            }
+        }
     }
     .course-list {
         width: 100%;
