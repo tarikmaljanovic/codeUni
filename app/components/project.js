@@ -25,6 +25,7 @@ export default function ProjectUI(props) {
     const [action, setAction] = useState('')
     const router = useRouter()
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
+    const [courseId, setCourseId] = useState(localStorage.getItem('course'))
     const [project, setProject] = useState({})
     const [content, setContent] = useState('')
     const [projectName, setProjectName] = useState('')
@@ -58,6 +59,19 @@ export default function ProjectUI(props) {
         })
     }
 
+    const handleFinishProject = () => {
+        axios.put(`http://localhost:8000/courses/updateProgress`, {
+            course_id: courseId,
+            user_id: user.id,
+            project_id: props.id,
+            type: "project"
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
     if(token) {
         return (
             <div className='container is-fluid px-5 project-container'>
@@ -78,7 +92,7 @@ export default function ProjectUI(props) {
                             )
                         }
                     </div>
-                    <Button style={{margin: 'auto', marginTop: '20px'}} className='bttn'>Finish Project</Button>
+                    <Button onClick={() => handleFinishProject()} style={{margin: 'auto', marginTop: '20px'}} className='bttn'>Finish Project</Button>
                 </div>
                 {
                     user.admin ? (

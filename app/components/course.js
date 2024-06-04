@@ -135,7 +135,7 @@ export default function CourseUI(props) {
                     {
                         course?.lessons?.map((item, index) => {
                             return (
-                                <div key={item.id} className='column is-12 course-cell lesson-cell'>
+                                <div onClick={() => localStorage.setItem('course', props.id)} key={item.id} className='column is-12 course-cell lesson-cell'>
                                     <Link href={`/lesson/${item.id}`}>
                                         <div className='notification course-box lesson-box'>
                                             <div className='left'>
@@ -152,7 +152,7 @@ export default function CourseUI(props) {
                     {
                         course?.projects?.map((item, index) => {
                             return (
-                                <div key={item.id} className='column is-12 course-cell project-cell'>
+                                <div onClick={() => localStorage.setItem('course', props.id)} key={item.id} className='column is-12 course-cell project-cell'>
                                     <Link href={`/project/${item.id}`}>
                                         <div className='notification course-box project-box'>
                                             <div className='left'>

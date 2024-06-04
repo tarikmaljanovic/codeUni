@@ -1,7 +1,7 @@
 'use client';
 import '../styles/quiz.scss'
 import { Button } from '@mui/joy'
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, use } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
@@ -12,6 +12,7 @@ export default function Quiz(props) {
     const [showResult, setShowResult] = useState(false)
     const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
+    const [courseId, setCourseId] = useState(localStorage.getItem('course'))
     const [quizId, setQuizId] = useState()
     const [newQuiz, setNewQuiz] = useState([
         {
@@ -47,6 +48,21 @@ export default function Quiz(props) {
         }).catch(err => {
             console.log(err)
         })
+    }
+
+    const handleFinishQuiz = () => {
+        axios.put(`http://localhost:8000/courses/updateProgress`, {
+            course_id: courseId,
+            user_id: user.id,
+            lesson_id: props.id,
+            type: "lesson"
+        }).then(res => {
+            console.log(res)
+        }).catch(err => {
+            console.log(err)
+        })
+
+        return (<p className='result-text'>Congratulations! You got all the answers right!</p>)
     }
 
     if(user.admin) {
@@ -166,9 +182,7 @@ export default function Quiz(props) {
                                     })
                                 }
                                 {
-                                    quiz.filter(question => question.chosenIndex == question.correctIndex).length == quiz.length ? (
-                                        <p className='result-text'>Congratulations! You got all the answers right!</p>
-                                    ) : (
+                                    quiz.filter(question => question.chosenIndex == question.correctIndex).length == quiz.length ? handleFinishQuiz() : (
                                         <p className='result-text'>You got {quiz.filter(question => question.chosenIndex == question.correctIndex).length} out of {quiz.length} questions right!</p>
                                     )
                                 
