@@ -32,7 +32,7 @@ export default function ProjectUI(props) {
     const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/projects/byId/${props.id}`).then(res => {
+        axios.get(process.env.API_HOST + `projects/byId/${props.id}`).then(res => {
             setProject(res.data)
             setContent(JSON.parse(res.data.project_content).content)
         }).catch(err => {
@@ -41,7 +41,7 @@ export default function ProjectUI(props) {
     }, [])
 
     const handleDeleteProject = () => {
-        axios.put(`http://localhost:8000/projects/deleteProject/${props.id}`, {token: token}).then(res => {
+        axios.put(process.env.API_HOST + `projects/deleteProject/${props.id}`, {token: token}).then(res => {
             router.push(`/course/${project.course_id}`)
         }).catch(err => {
             console.log(err)
@@ -49,7 +49,7 @@ export default function ProjectUI(props) {
     }
 
     const handleNameChange = () => {
-        axios.put(`http://localhost:8000/projects/updateProject/${props.id}`, {
+        axios.put(process.env.API_HOST + `projects/updateProject/${props.id}`, {
             token: JSON.parse(localStorage.getItem('token')),
             project_title: projectName,
         }).then(res => {
@@ -60,13 +60,21 @@ export default function ProjectUI(props) {
     }
 
     const handleFinishProject = () => {
-        axios.put(`http://localhost:8000/courses/updateProgress`, {
+        axios.put(process.env.API_HOST + `courses/updateProgress`, {
             course_id: courseId,
             user_id: user.id,
             project_id: props.id,
             type: "project"
         }).then(res => {
             console.log(res)
+        }).catch(err => {
+            console.log(err)
+        })
+
+        axios.post(process.env.API_HOST + 'badges/assignBadge', {
+            user_id: user.id
+        }).then(res => {
+            console.log(res.data)
         }).catch(err => {
             console.log(err)
         })

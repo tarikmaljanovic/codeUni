@@ -1,11 +1,11 @@
 'use client';
 import '../styles/quiz.scss'
 import { Button } from '@mui/joy'
-import { useState, useEffect, useCallback, use } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
-import axios from 'axios'
+import axios, { all } from 'axios'
 
 export default function Quiz(props) {
     const [currentQuestion, setCurrentQuestion] = useState(0)
@@ -25,7 +25,7 @@ export default function Quiz(props) {
     const [quiz, setQuiz] = useState([])
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/quizzes/byLessonId/${props.id}`).then(res => {
+        axios.get(process.env.API_HOST + `quizzes/byLessonId/${props.id}`).then(res => {
             setQuiz(JSON.parse(res.data.quiz_content))
             setQuizId(res.data.id)
         }).catch(err => {
@@ -40,7 +40,7 @@ export default function Quiz(props) {
     }, [quiz])
 
     const handleSaveQuiz = () => {
-        axios.put(`http://localhost:8000/quizzes/updateQuiz/${quizId}`, {
+        axios.put(process.env.API_HOST + `quizzes/updateQuiz/${quizId}`, {
             token: token, 
             quiz_content: JSON.stringify(newQuiz)
         }).then(res => {
@@ -51,19 +51,36 @@ export default function Quiz(props) {
     }
 
     const handleFinishQuiz = () => {
-        axios.put(`http://localhost:8000/courses/updateProgress`, {
+
+        axios.put(process.env.API_HOST + `courses/updateProgress`, {
             course_id: courseId,
             user_id: user.id,
             lesson_id: props.id,
             type: "lesson"
         }).then(res => {
             console.log(res)
+            axios.post(process.env.API_HOST + `badges/smartCookieBadge`, {
+                user_id: user.id
+            }).then(res => {
+                console.log(res)
+            }).catch(err => {
+                console.log(err)
+            })
+            axios.post(process.env.API_HOST + `badges/assignBadge`, {
+                user_id: user.id
+            }).then(res => {
+                console.log(res)
+            }).catch(err => {
+                console.log(err)
+            })
         }).catch(err => {
             console.log(err)
         })
+        
 
         return (<p className='result-text'>Congratulations! You got all the answers right!</p>)
     }
+    
 
     if(user.admin) {
         return (
@@ -229,7 +246,10 @@ export default function Quiz(props) {
                                         }
                                         {
                                             currentQuestion == quiz.length - 1 ? (
-                                                <Button onClick={() => setShowResult(true)} className='bttn'>Finish</Button>
+                                                <Button onClick={(e) => {
+                                                    e.stopPropagation()
+                                                    setShowResult(true)
+                                                }} className='bttn'>Finish</Button>
                                             ) : (
                                                 <Button onClick={() => setCurrentQuestion(currentQuestion+1)} className='bttn'>Next</Button>
                                             )

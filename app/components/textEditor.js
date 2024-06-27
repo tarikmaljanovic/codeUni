@@ -9,7 +9,7 @@ export default function TextEditor(props) {
   const [content, setContent] = useState(props.content);
 
   const handleLessonUpdate = () => {
-    axios.put(`http://localhost:8000/lessons/updateLessonContent/${props.id}`, {
+    axios.put(process.env.API_HOST + `lessons/updateLessonContent/${props.id}`, {
       token: JSON.parse(localStorage.getItem('token')),
       content: content,
     }).then(res => {
@@ -20,7 +20,7 @@ export default function TextEditor(props) {
   }
 
   const handleProjectUpdate = () => {
-    axios.put(`http://localhost:8000/projects/updateProjectContent/${props.id}`, {
+    axios.put(process.env.API_HOST + `projects/updateProjectContent/${props.id}`, {
       token: JSON.parse(localStorage.getItem('token')),
       content: content,
     }).then(res => {

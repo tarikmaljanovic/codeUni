@@ -34,7 +34,7 @@ export default function LessonUI(props) {
     })
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/lessons/byId/${props.id}`).then(res => {
+        axios.get(process.env.API_HOST + `lessons/byId/${props.id}`).then(res => {
             setLesson(res.data)
             setContent(JSON.parse(res.data.lesson_content).content)
         }).catch(err => {
@@ -43,7 +43,7 @@ export default function LessonUI(props) {
     }, [])
 
     const handleDeleteLesson = () => {
-        axios.put(`http://localhost:8000/lessons/deleteLesson/${props.id}`, {token: token}).then(res => {
+        axios.put(process.env.API_HOST + `lessons/deleteLesson/${props.id}`, {token: token}).then(res => {
             router.push(`/course/${lesson.course_id}`)
         }).catch(err => {
             console.log(err)
@@ -56,7 +56,7 @@ export default function LessonUI(props) {
             lesson_title: lessonData.lesson_title,
             id: props.id
         }
-        axios.put(`http://localhost:8000/lessons/updateLesson/${props.id}`, data).then(res => {
+        axios.put(process.env.API_HOST + `lessons/updateLesson/${props.id}`, data).then(res => {
             setLesson({...lesson, lesson_title: lessonData.lesson_title})
         }).catch(err => {
             console.log(err)

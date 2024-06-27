@@ -16,6 +16,7 @@ import DialogContent from '@mui/joy/DialogContent';
 import Stack from '@mui/joy/Stack';
 import CourseList from './courseList';
 import axios from 'axios'
+import { configDotenv } from 'dotenv'
 
 export default function AdminDashboardUI(props) {
     const actions = [
@@ -38,7 +39,7 @@ export default function AdminDashboardUI(props) {
         form.append('upload_preset', 'tariksdp');
 
         axios.post('https://api-eu.cloudinary.com/v1_1/ds2qt32nd/image/upload', form).then(res => {
-            axios.post('http://localhost:8000/courses/createCourse', {
+            axios.post(process.env.API_HOST + 'courses/createCourse', {
                 course_title: courseData.course_title,
                 course_image_url: res.data.url,
                 token: token
@@ -49,13 +50,13 @@ export default function AdminDashboardUI(props) {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:8000/courses/').then(res => {
+        axios.get(process.env.API_HOST + 'courses/').then(res => {
             setCourses(res.data)
         }).catch(err => {
             console.log(err)
         })
 
-        axios.get('http://localhost:8000/badges/').then(res => {
+        axios.get(process.env.API_HOST + 'badges/').then(res => {
             setBadges(res.data)
         }).catch(err => {
             console.log(err)

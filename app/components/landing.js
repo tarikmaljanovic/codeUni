@@ -29,7 +29,7 @@ export default function Landing() {
 
     const handleLogin = () => {
         loginSchema.validate(loginData).then(() => {
-            axios.post('http://localhost:8000/users/login', loginData).then(res => {
+            axios.post(process.env.API_HOST + 'users/login', loginData).then(res => {
                 localStorage.setItem('user', JSON.stringify(res.data.user))
                 localStorage.setItem('token', JSON.stringify(res.data.token))
                 router.push('/dashboard')
@@ -52,7 +52,7 @@ export default function Landing() {
 
     const handleSignup = () => {
         signupSchema.validate(signupData).then(() => {
-            axios.post('http://localhost:8000/users/signup', signupData).then(res => {
+            axios.post(process.env.API_HOST + 'users/signup', signupData).then(res => {
                 localStorage.setItem('user', JSON.stringify(res.data.user))
                 localStorage.setItem('token', JSON.stringify(res.data.token))
                 router.push('/dashboard')

@@ -56,7 +56,7 @@ export default function CourseUI(props) {
 
     useEffect(() => {
         if(user.id) {
-            axios.get(`http://localhost:8000/courses/byId/${props.id}/${user.id}`).then(res => {
+            axios.get(process.env.API_HOST + `courses/byId/${props.id}/${user.id}`).then(res => {
                 setCourse(res.data)
                 setIsFavorite(res?.data?.course?.UserCour?.starred)
             })
@@ -64,7 +64,7 @@ export default function CourseUI(props) {
     }, [])
 
     const createLesson = () => {
-        axios.post('http://localhost:8000/lessons/createLesson', lessonData).then(res => {
+        axios.post(process.env.API_HOST + 'lessons/createLesson', lessonData).then(res => {
             setCourse({...course, lessons: [...course.lessons, res.data]})
         }).catch(err => {
             console.log(err)
@@ -72,7 +72,7 @@ export default function CourseUI(props) {
     }
 
     const createProject = () => {
-        axios.post('http://localhost:8000/projects/createProject', projectData).then(res => {
+        axios.post(process.env.API_HOST + 'projects/createProject', projectData).then(res => {
             setCourse({...course, projects: [...course.projects, res.data]})
         }).catch(err => {
             console.log(err)
@@ -80,7 +80,7 @@ export default function CourseUI(props) {
     }
 
     const handleDeleteCourse = () => {
-        axios.put(`http://localhost:8000/courses/deleteCourse/${props.id}`, {
+        axios.put(process.env.API_HOST + `courses/deleteCourse/${props.id}`, {
             token: token
         }).then(res => {
             router.push('/dashboard')
@@ -95,7 +95,7 @@ export default function CourseUI(props) {
         form.append('upload_preset', 'tariksdp');
 
         axios.post('https://api-eu.cloudinary.com/v1_1/ds2qt32nd/image/upload', form).then(res => {
-            axios.put(`http://localhost:8000/courses/updateCourse/${props.id}`, {
+            axios.put(process.env.API_HOST + `courses/updateCourse/${props.id}`, {
                 course_id: props.id,
                 course_title: courseData.course_title,
                 course_image_url: res.data.url,
@@ -109,10 +109,20 @@ export default function CourseUI(props) {
     }
 
     const handleFavorite = () => {
-        axios.put('http://localhost:8000/courses/favoriteCourse', {
+        axios.put(process.env.API_HOST + 'courses/favoriteCourse', {
             course_id: props.id,
             user_id: user.id,
             favorite: isFavorite
+        }).then(res => {
+            console.log(res.data)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const handleBagdes = () => {
+        axios.post(process.env.API_HOST + 'badges/assignBadge', {
+            user_id: user.id
         }).then(res => {
             console.log(res.data)
         }).catch(err => {
@@ -169,7 +179,7 @@ export default function CourseUI(props) {
                 </div>
                 {
                     user?.admin ? null : (
-                        <Button disabled={course?.course?.UserCour?.progress != 1} className='bttn'>Finish Course</Button>
+                        <Button onClick={() => handleBagdes()} disabled={course?.course?.UserCour?.progress != 1} className='bttn'>Finish Course</Button>
                     )
                 }
                 {

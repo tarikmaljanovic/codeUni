@@ -19,19 +19,19 @@ export default function DashboardUI() {
 
     useEffect(() => {
         if(!user.admin) {
-            axios.get(`http://localhost:8000/courses/userCourses/${user.id}`).then(res => {
+            axios.get(process.env.API_HOST + `courses/userCourses/${user.id}`).then(res => {
                 setCourses(res.data)
             }).catch(err => {
                 console.log(err)
             })
 
-            axios.get(`http://localhost:8000/badges/userBadges/${user.id}`).then(res => {
+            axios.get(process.env.API_HOST + `badges/userBadges/${user.id}`).then(res => {
                 setBadges(res.data)
             }).catch(err => {
                 console.log(err)
             })
             
-            axios.get('http://localhost:8000/users/leaderboard').then(res => {
+            axios.get(process.env.API_HOST + 'users/leaderboard').then(res => {
                 setLeaderboard(res.data)
             }).catch(err => {
                 console.log(err)
@@ -62,11 +62,11 @@ export default function DashboardUI() {
                                     return (
                                         <div key={index} className='column is-4 badge-cell'>
                                             <div className='notification badge-box'>
-                                                <Image alt='.' src={item.badge_image_url} width={100} height={100} />
+                                                <Image alt='.' src={item.Badge.badge_image_url} width={100} height={100} />
                                                 <div className='description-section'>
-                                                    <p className='badge-name'>{item.badge_name}</p>
+                                                    <p className='badge-name'>{item.Badge.badge_name}</p>
                                                     <p className='badge-description'>
-                                                        {item.badge_description}
+                                                        {item.Badge.badge_description}
                                                     </p>
                                                 </div>
                                             </div>

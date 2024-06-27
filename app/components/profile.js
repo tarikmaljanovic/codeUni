@@ -1,5 +1,6 @@
 'use client'
 import '../styles/profile.scss'
+import '../styles/dashboard.scss'
 import { EmojiEvents, WorkspacePremium, Download } from '@mui/icons-material'
 import { Button } from '@mui/joy'
 import { useRouter } from 'next/navigation'
@@ -8,7 +9,7 @@ import CourseList from './courseList'
 import axios from 'axios'
 import Navbar from "./navbar"
 import Image from 'next/image'
-import { Delete, Edit, Add } from '@mui/icons-material'
+import { Edit, Add } from '@mui/icons-material'
 import { Box, SpeedDial, SpeedDialAction } from '@mui/material'
 import Modal from '@mui/joy/Modal';
 import ModalDialog from '@mui/joy/ModalDialog';
@@ -17,7 +18,6 @@ import DialogContent from '@mui/joy/DialogContent';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
-
 
 export default function ProfileUI() {
     const actions = [
@@ -33,6 +33,7 @@ export default function ProfileUI() {
     const [otherCourses, setOtherCourses] = useState([])
     const [completedCourses, setCompletedCourses] = useState([])
     const [badges, setBadges] = useState([])
+    const [students, setStudents] = useState([])
     const [userData, setUserData] = useState({
         first_name: '',
         last_name: '',
@@ -40,14 +41,38 @@ export default function ProfileUI() {
         password: ''
     })
 
+    const generatePdf = async (course_title) => {
+        try {
+            const response = await axios.post(
+                process.env.API_HOST + 'users/downloadCertificate',
+                {
+                    first_name: user.first_name,
+                    last_name: user.last_name,
+                    course_title: course_title
+                },
+                { responseType: 'blob' }
+            );
+
+            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'certificate.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+        } catch (error) {
+            console.error('Error downloading the PDF', error);
+        }
+    };
+
     useEffect(() => {
-        axios.get(`http://localhost:8000/courses/userCourses/${user.id}`).then(res => {
+        axios.get(process.env.API_HOST + `courses/userCourses/${user.id}`).then(res => {
             setCourses(res.data)
         }).catch(err => {
             console.log(err)
         })
 
-        axios.get(`http://localhost:8000/badges/userBadges/${user.id}`).then(res => {
+        axios.get(process.env.API_HOST + `badges/userBadges/${user.id}`).then(res => {
             setBadges(res.data)
         }).catch(err => {
             console.log(err)
@@ -64,6 +89,16 @@ export default function ProfileUI() {
     }, [user])
 
     useEffect(() => {
+        if(user.admin) {
+            axios.get(process.env.API_HOST + 'users/allStudents').then(res => {
+                setStudents(res.data)
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+    }, [user])
+
+    useEffect(() => {
         const favs = courses.filter(course => course?.UserCour?.starred === true)
         const notFavs = courses.filter(course => course?.UserCour?.starred === false)
         const completed = courses.filter(course => course?.UserCour?.certificate === true)
@@ -73,10 +108,42 @@ export default function ProfileUI() {
     }, [courses])
 
     const handleSaveChanges = () => {
-        axios.put(`http://localhost:8000/users/update/${user.id}`, userData).then(res => {
+        axios.put(process.env.API_HOST + `users/update/${user.id}`, userData).then(res => {
             localStorage.setItem('user', JSON.stringify(res.data))
             setUser(res.data)
             setOpen(false)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const disableAccount = (id) => {
+        axios.put(process.env.API_HOST + 'users/disableAccount', {
+            token: JSON.parse(token),
+            user_id: id
+        }).then(res => {
+            setStudents(students.map(student => {
+                if(student.id == id) {
+                    student.disabled = true
+                }
+                return student
+            }))
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    const enableAccount = (id) => {
+        axios.put(process.env.API_HOST + 'users/enableAccount', {
+            token: JSON.parse(token),
+            user_id: id
+        }).then(res => {
+            setStudents(students.map(student => {
+                if(student.id == id) {
+                    student.disabled = false
+                }
+                return student
+            }))
         }).catch(err => {
             console.log(err)
         })
@@ -92,7 +159,29 @@ export default function ProfileUI() {
                 {
                     user?.admin ? (
                         <>
-                            
+                            <div className='container is-fluid px-0 dashboard-container'>
+                                <div className='columns is-multiline is-desktop list'>
+                                    <div className={`column is-12 leaderboard-cell`}>
+                                        {
+                                            students?.map((item, index) => {
+                                                return(
+                                                    <div key={index} className='notification leaderboard-box'>
+                                                        <span className='user-name'>{item.first_name} {item.last_name}</span>
+                                                        <span className='rank'>{item.email}</span>
+                                                        {
+                                                            item.disabled ? (
+                                                                <Button onClick={() => enableAccount(item.id)} size="md" variant={'solid'} color="success">Enable</Button>
+                                                            ) : (
+                                                                <Button onClick={() => disableAccount(item.id)} size="md" variant={'solid'} color="danger">Disbale</Button>
+                                                            )
+                                                        }
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         </>
                     ) : (
                         <>
@@ -113,11 +202,11 @@ export default function ProfileUI() {
                                         return (
                                             <div key={index} className='column is-4 badge-cell'>
                                                 <div className='notification badge-box'>
-                                                    <Image alt='.' src={item.badge_image_url} width={100} height={100} />
+                                                    <Image alt='.' src={item.Badge.badge_image_url} width={100} height={100} />
                                                     <div className='description-section'>
-                                                        <p className='badge-name'>{item.badge_name}</p>
+                                                        <p className='badge-name'>{item.Badge.badge_name}</p>
                                                         <p className='badge-description'>
-                                                            {item.badge_description}
+                                                            {item.Badge.badge_description}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -148,7 +237,7 @@ export default function ProfileUI() {
                                                     <Image alt='img' src={item.course_image_url} width={100} height={100} className='course-image'/>
                                                     <div className='right'>
                                                         <span className='course-name'>{item.course_title}</span>
-                                                        <Button className='bttn'>Download<Download/></Button>
+                                                        <Button onClick={() => generatePdf(item.course_title)} className='bttn'>Download<Download/></Button>
                                                     </div>
                                                 </div>
                                             </div>
