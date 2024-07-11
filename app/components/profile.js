@@ -26,8 +26,8 @@ export default function ProfileUI() {
     const [open, setOpen] = useState(false)
     const [action, setAction] = useState('')
     const router = useRouter()
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
-    const [token, setToken] = useState(localStorage.getItem('token'))
+    const [user, setUser] = useState(null)
+    const [token, setToken] = useState(null)
     const [courses, setCourses] = useState([])
     const [favoriteCourses, setFavoriteCourses] = useState([])
     const [otherCourses, setOtherCourses] = useState([])
@@ -40,6 +40,15 @@ export default function ProfileUI() {
         email: '',
         password: ''
     })
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedToken = JSON.parse(localStorage.getItem('token'))
+            const storedUser = JSON.parse(localStorage.getItem('user'))
+            setToken(storedToken)
+            setUser(storedUser)
+        }
+    }, [])
 
     const generatePdf = async (course_title) => {
         try {

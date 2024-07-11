@@ -11,11 +11,20 @@ import { useEffect, useState } from 'react'
 
 export default function DashboardUI() {
     const router = useRouter()
-    const [token, setToken] = useState(JSON.parse(localStorage.getItem('token')))
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
+    const [token, setToken] = useState(null)
+    const [user, setUser] = useState(null)
     const [courses, setCourses] = useState([])
     const [badges, setBadges] = useState([])
     const [leaderboard, setLeaderboard] = useState([])
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const storedToken = JSON.parse(localStorage.getItem('token'))
+            const storedUser = JSON.parse(localStorage.getItem('user'))
+            setToken(storedToken)
+            setUser(storedUser)
+        }
+    }, [])
 
     useEffect(() => {
         if(!user.admin) {
