@@ -304,7 +304,7 @@ export default function ProfileUI() {
             </div>
         )
     } else {
-        const router = useRouter()
+        localStorage.clear()
         router.push('/')
     }
 }

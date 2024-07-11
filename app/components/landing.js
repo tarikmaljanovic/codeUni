@@ -209,7 +209,7 @@ export default function Landing() {
                         />
                     </FormControl>
                 </FormControl>
-                <span className='to-login'>Don't have an account? <a onClick={() => setIsLogin(false)} className='link'>Sign up</a></span>
+                <span className='to-login'>No account? <a onClick={() => setIsLogin(false)} className='link'>Sign up</a></span>
                 <div className='buttons'>
                     <Button className='is-invisible'></Button>
                     <Button
