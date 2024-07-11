@@ -18,6 +18,7 @@ export default function DashboardUI() {
     const [leaderboard, setLeaderboard] = useState([])
 
     useEffect(() => {
+        // Check if running on client-side
         if (typeof window !== 'undefined') {
             const storedToken = JSON.parse(localStorage.getItem('token'))
             const storedUser = JSON.parse(localStorage.getItem('user'))
@@ -27,7 +28,7 @@ export default function DashboardUI() {
     }, [])
 
     useEffect(() => {
-        if(!user.admin) {
+        if(user && !user.admin) {
             axios.get(process.env.API_HOST + `courses/userCourses/${user.id}`).then(res => {
                 setCourses(res.data)
             }).catch(err => {
@@ -46,9 +47,9 @@ export default function DashboardUI() {
                 console.log(err)
             })
         }
-    }, [])
+    }, [user])
 
-    if(token) {
+    if(token && user) {
         if(user?.admin) {
             return(
                 <AdminDashboardUI user={user}/>
@@ -134,7 +135,6 @@ export default function DashboardUI() {
             )
         }
     } else {
-        localStorage.clear()
-        router.push('/')
+        return null
     }
 }
