@@ -1,6 +1,7 @@
 # CodeUni
 
-A modern learning platform built with Next.js, focusing on interactive coding education and project-based learning.
+A modern learning platform built with Next.js, focusing on interactive coding education and project-based learning. \
+Available on: https://codeuni.onrender.com/
 
 ## Features
 
