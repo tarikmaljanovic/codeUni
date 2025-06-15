@@ -1,6 +1,5 @@
 'use client'
 import '../styles/landing.scss'
-import axios from 'axios'
 import { Button } from '@mui/joy'
 import { TextField, Input, InputAdornment, IconButton, InputLabel, FormControl, Alert, Snackbar } from '@mui/material'
 import { Visibility, VisibilityOff, Email } from '@mui/icons-material'
@@ -8,9 +7,12 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import loginSchema from '../validationSchemas/login'
 import signupSchema from '../validationSchemas/signup'
+import { useAuth } from '../context/AuthContext'
+import { securePost } from '../utils/apiClient'
 
 export default function Landing() {
     const router = useRouter()
+    const { login } = useAuth()
     const [errorMessage, setErrorMessage] = useState('')
     const [error, setError] = useState(false)
     const [isLogin, setIsLogin] = useState(true)
@@ -27,55 +29,39 @@ export default function Landing() {
         email: '',
     })
 
-    const handleLogin = () => {
-        loginSchema.validate(loginData).then(() => {
-            axios.post(process.env.API_HOST + 'users/login', loginData).then(res => {
-                localStorage.setItem('user', JSON.stringify(res.data.user))
-                localStorage.setItem('token', JSON.stringify(res.data.token))
-                router.push('/dashboard')
-            }).catch(error => {
-                console.log(error)
-                setErrorMessage('Error logging in!')
-                setError(true)
-                setTimeout(() => {
-                    setError(false)
-                }, 5000)
-            })
-        }).catch(error => {
-            setErrorMessage(error.errors[0])
-            setError(true)
-            setTimeout(() => {
-                setError(false)
-            }, 5000)
-        })
-    }
+    const handleError = (error) => {
+        const message = error.response?.data?.message || error.message || 'An error occurred';
+        setErrorMessage(message);
+        setError(true);
+        setTimeout(() => setError(false), 5000);
+    };
 
-    const handleSignup = () => {
-        signupSchema.validate(signupData).then(() => {
-            axios.post(process.env.API_HOST + 'users/signup', signupData).then(res => {
-                localStorage.setItem('user', JSON.stringify(res.data.user))
-                localStorage.setItem('token', JSON.stringify(res.data.token))
-                router.push('/dashboard')
-            }).catch(error => {
-                setErrorMessage('Error signing up!')
-                setError(true)
-                setTimeout(() => {
-                    setError(false)
-                }, 5000)
-            })
-        }).catch(error => {
-            setErrorMessage(error.errors)
-            setError(true)
-            setTimeout(() => {
-                setError(false)
-            }, 5000)
-        })
-    }
+    const handleLogin = async () => {
+        try {
+            await loginSchema.validate(loginData);
+            const response = await securePost('users/login', loginData);
+            login(response.user, response.token);
+            router.push('/dashboard');
+        } catch (error) {
+            handleError(error);
+        }
+    };
+
+    const handleSignup = async () => {
+        try {
+            await signupSchema.validate(signupData);
+            const response = await securePost('users/signup', signupData);
+            login(response.user, response.token);
+            router.push('/dashboard');
+        } catch (error) {
+            handleError(error);
+        }
+    };
 
     return(
         <div className='container is-fluid landing-container'>
             <div className={`box landing-box ${isLogin ? 'is-hidden' : ''}`}>
-                <div className='banner'>
+                <div className='banner signup-banner'>
                     codeuni
                 </div>
                 <div className={`form-body ${isLogin ? 'is-hidden' : ''}`}>
@@ -163,7 +149,7 @@ export default function Landing() {
                 </div>
             </div>
             <div className={`box landing-box ${isLogin ? '' : 'is-hidden'}`}>
-                <div className='banner'>
+                <div className='banner login-banner'>
                     codeuni
                 </div>
                 <FormControl className={`form-body`}>
