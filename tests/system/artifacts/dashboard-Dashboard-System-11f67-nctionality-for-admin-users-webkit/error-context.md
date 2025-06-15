@@ -1,0 +1,51 @@
+# Page snapshot
+
+```yaml
+- alert
+- text: "codeuni Test User Welcome: Test User"
+- button "My Profile"
+- button "Dashboard"
+- button "Log out"
+- text: Course List
+- link "JavaScript":
+  - /url: course/14
+- link "Python":
+  - /url: course/15
+- link "PHP":
+  - /url: course/16
+- link "Java":
+  - /url: course/17
+- link "Ruby":
+  - /url: course/18
+- text: Show More Badges
+- img "badge-icon"
+- paragraph: Senior
+- paragraph: By completing all but one course, you have earned the 'Senior' badge.
+- img "badge-icon"
+- paragraph: First Course
+- paragraph: By starting your first course, you have earned the 'First Course' badge
+- img "badge-icon"
+- paragraph: Smart Cookie
+- paragraph: By completing a quiz the first try, you have earned the 'Smart Cookie' badge
+- img "badge-icon"
+- paragraph: Finish Line
+- paragraph: By completing every course, you have earned the 'Finish Line' badge!
+- img "badge-icon"
+- paragraph: Freshmen
+- paragraph: By completing your first course, you have earned the 'Freshmen' badge!
+- img "badge-icon"
+- paragraph: Frontend Dev
+- paragraph: By completing the HTML, CSS and JavaScript courses, you have earned the 'Frontend Dev' badge!
+- img "badge-icon"
+- paragraph: Backend Dev
+- paragraph: By completing the MongoDB, Express.js and Node.js courses, you have earned the 'Backend Dev' badge!
+- img "badge-icon"
+- paragraph: Overachiever
+- paragraph: By acquiring every badge, you have earned the 'Overachiever' badge!
+- img "badge-icon"
+- paragraph: Full Stack Developer
+- paragraph: By earning both the 'Frontend Dev' and 'Backend Dev', you have earned the 'Full Stakc Developer' badge!
+- button "SpeedDial basic example"
+- menu:
+  - menuitem "Create Course"
+```

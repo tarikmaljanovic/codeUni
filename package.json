@@ -6,7 +6,28 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest",
+    "test:unit": "jest tests/unit",
+    "test:integration": "jest tests/integration",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:system": "playwright test",
+    "test:system:headed": "playwright test --headed",
+    "test:system:debug": "playwright test --debug",
+    "test:system:ui": "playwright test --ui",
+    "test:system:report": "playwright show-report tests/system/reports/html",
+    "test:system:headless": "playwright test --headless",
+    "test:system:ci": "playwright test --reporter=html",
+    "test:system:performance": "playwright test tests/system/performance.spec.js",
+    "test:regression": "jest tests/regression/",
+    "test:regression:demo": "node tests/regression/regression-demo.js",
+    "test:regression:quick": "node tests/regression/regression-demo.js --quick",
+    "test:coverage:analysis": "node tests/coverage/coverage-analysis.js",
+    "test:coverage:badges": "node tests/coverage/coverage-badge.js",
+    "test:coverage:report": "npm run test:coverage && open tests/coverage/reports/lcov-report/index.html",
+    "test:coverage:threshold": "npm test -- --coverage --coverageThreshold='{}' --watchAll=false",
+    "test:all": "npm run test && npm run test:regression && npm run test:system:headless"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -30,7 +51,15 @@
     "yup": "^1.3.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
     "eslint": "^8",
-    "eslint-config-next": "14.0.3"
+    "eslint-config-next": "14.0.3",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
   }
 }
