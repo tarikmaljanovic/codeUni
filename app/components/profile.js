@@ -18,6 +18,7 @@ import DialogContent from '@mui/joy/DialogContent';
 import FormControl from '@mui/joy/FormControl';
 import FormLabel from '@mui/joy/FormLabel';
 import Input from '@mui/joy/Input';
+import { Snackbar, Alert } from '@mui/material'
 
 export default function ProfileUI() {
     const actions = [
@@ -40,7 +41,8 @@ export default function ProfileUI() {
         email: '',
         password: ''
     })
-
+    const [error, setError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -132,29 +134,31 @@ export default function ProfileUI() {
             .catch(err => console.error(err));
     };
 
-    const generatePdf = async (course_title) => {
+    const downloadCertificate = async (id) => {
         try {
-            const response = await axios.post(
-                process.env.API_HOST + 'users/downloadCertificate',
-                {
-                    first_name: user.first_name,
-                    last_name: user.last_name,
-                    course_title: course_title
-                },
-                { responseType: 'blob' }
-            );
-
-            const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'certificate.pdf');
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
+            const response = await axios.get(process.env.API_HOST + `certificates/download/${id}`, {
+                responseType: 'blob',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            const url = window.URL.createObjectURL(new Blob([response.data]))
+            const link = document.createElement('a')
+            link.href = url
+            link.setAttribute('download', 'certificate.pdf')
+            document.body.appendChild(link)
+            link.click()
+            link.remove()
         } catch (error) {
-            console.error('Error downloading the PDF', error);
+            console.error('Error downloading the PDF', error)
+            setErrorMessage('Failed to download certificate. Please try again.')
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+                setErrorMessage('')
+            }, 5000)
         }
-    };
+    }
 
     if (typeof window === 'undefined' || !token) {
         return null; // or return a loading indicator or redirect
@@ -247,7 +251,7 @@ export default function ProfileUI() {
                                             <Image alt='img' src={item.course_image_url} width={100} height={100} className='course-image'/>
                                             <div className='right'>
                                                 <span className='course-name'>{item.course_title}</span>
-                                                <Button onClick={() => generatePdf(item.course_title)} className='bttn'>Download<Download/></Button>
+                                                <Button onClick={() => downloadCertificate(item.id)} className='bttn'>Download<Download/></Button>
                                             </div>
                                         </div>
                                     </div>
@@ -311,6 +315,11 @@ export default function ProfileUI() {
                 ))}
             </SpeedDial>
         </Box>
+        <Snackbar open={error} autoHideDuration={5000}>
+            <Alert severity="error" sx={{ width: '100%' }}>
+                {errorMessage}
+            </Alert>
+        </Snackbar>
     </div>
     );
 }

@@ -12,7 +12,7 @@ export default function CourseList(props) {
 
     return (
         <>
-            <div className='columns is-multiline is-desktop course-list'>
+            <div className='columns is-multiline is-desktop course-list main-course-list'>
                 {
                     courses?.map((item, index) => {
                         if(item.deleted == 1) {
@@ -35,7 +35,7 @@ export default function CourseList(props) {
                     }) || null
                     }
                 </div>
-                <div className={`columns is-multiline is-desktop course-list ${showMore ? '' : 'less'}`}>
+                <div className={`columns is-multiline is-desktop course-list extended-course-list ${showMore ? '' : 'less'}`}>
                 {
                     courses?.map((item, index) => {
                         if(item.deleted == 1) {
